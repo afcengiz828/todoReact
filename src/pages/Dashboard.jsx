@@ -1,12 +1,12 @@
 import React from 'react'
-import AddTodo from '../components/AddTodo'
+import TodoForm from '../components/TodoForm'
 
 const Dashboard = () => {
   
     return (
     <>
-        <AddTodo/>
-        <div>Dashboard</div>
+        
+        <div>Dashboard Page</div>
     </>
   )
 }
