@@ -11,11 +11,9 @@ const initialState = {
 
 }
 
-export const getTodo = createAsyncThunk( "gettodo" ,async () => {
+export const getAllTodo = createAsyncThunk( "gettodo" ,async () => {
     const response = await axios.get("http://localhost:8000/api/todos");
     console.log("Api çağrısı başarılı");
-
-
     return response.data;
 })
 
@@ -25,13 +23,14 @@ export const addTodo = createAsyncThunk( "addtodo" ,async (newTodo) => {
     return response;
 })
 
+
 export const TodoSlice = createSlice({
     name: "TodoSlice",
     initialState,
     reducers:{},
     extraReducers : (builder) => {
         builder
-            .addCase(getTodo.fulfilled, (state, action) => {
+            .addCase(getAllTodo.fulfilled, (state, action) => {
                 //console.log(action.payload);
                 state.status = action.payload.status;
                 state.messages = action.payload.messages;
@@ -41,11 +40,11 @@ export const TodoSlice = createSlice({
                 state.loading = false;
                 console.log("Api sonrası işlemler başarılı.");
             })
-            .addCase(getTodo.pending, (state) => {
+            .addCase(getAllTodo.pending, (state) => {
                 state.loading = true;
                 
             })
-            .addCase(getTodo.rejected, (state, action) => {
+            .addCase(getAllTodo.rejected, (state, action) => {
                 state.error = action.payload;
                 state.loading = false;
             })
@@ -64,6 +63,7 @@ export const TodoSlice = createSlice({
                 state.status = action.payload.status;
                 state.loading = false;
             })
+            
     }
     
 })
