@@ -27,7 +27,11 @@ export const addTodo = createAsyncThunk( "addtodo" ,async (newTodo) => {
 export const TodoSlice = createSlice({
     name: "TodoSlice",
     initialState,
-    reducers:{},
+    reducers:{
+        updateList : (state, action) => {
+            state.data = action.payload;
+        }
+    },
     extraReducers : (builder) => {
         builder
             .addCase(getAllTodo.fulfilled, (state, action) => {
@@ -67,5 +71,8 @@ export const TodoSlice = createSlice({
     }
     
 })
+
+export const {  updateList } = TodoSlice.actions;
+
 
 export default TodoSlice.reducer;

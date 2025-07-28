@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux'
 
 const TodoItem = ({idList}) => {
     const selector = useSelector((state) => state.todo);
-    console.log(selector.data);
     var elements = [];
     
     for(let i=0;i<idList.length;i++){
@@ -13,10 +12,8 @@ const TodoItem = ({idList}) => {
             if(element.id == idList[i]){
                 elements.push(element); 
             } 
-            console.log(element)
         });
     }
-    console.log("elements " + elements);
   return (
     <div> 
                 <table>
