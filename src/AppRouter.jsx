@@ -2,7 +2,7 @@ import React from 'react'
 import { Route, Router, Routes } from 'react-router-dom'
 import Dashboard from './pages/dashboard'
 import TodoDetail from './pages/TodoDetail'
-import TodoList from './pages/TodoList'
+import {TodoListPage} from './pages/TodoListPage'
 
 const AppRouter = () => {
     
@@ -13,9 +13,8 @@ const AppRouter = () => {
         <Routes>
             <Route path='/' element={<Dashboard/>}/>
             <Route path='/tododetail' element={<TodoDetail/>}/>
-            <Route path='/todolist' element={<TodoList/>}/>
+            <Route path='/todolist' element={<TodoListPage/>}/>
         </Routes>
-        <div>AppRouter</div>
     </>
   )
 }

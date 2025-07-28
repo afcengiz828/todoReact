@@ -2,7 +2,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { isValid, parse } from 'date-fns';
 import React from 'react'
 import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import { getTodo } from '../redux/features/todo/TodoSlice';
 import * as Yup from "yup";
+import { Link, Route, useNavigate } from 'react-router-dom';
 
 const TodoForm = () => {
   
@@ -12,11 +15,11 @@ const TodoForm = () => {
         title: Yup.string().required("Title is required.")
             .min(5, "Title must be 3 character at least")
             .max(100, "Title must be max 100 character"),
-        description : Yup.string().required(false, "").max(500, "Description must be max 500 character"),
+        description : Yup.string().max(500, "Description must be max 500 character"),
         status: Yup.string().required("Status is required."),
         priority: Yup.string(),
         dueDate: Yup.string()
-            .matches(dateRegex, "Tarih formatı yyyy-MM-dd şeklinde olmalı")
+            .matches(dateRegex, "Please enter date in the valid format")
             .test("valid-date", "Please enter a valid date", (value) => {
                 const date = parse(value, "yyyy-mm-dd", new Date());
                 return isValid(date);
@@ -35,10 +38,18 @@ const TodoForm = () => {
             resolver : yupResolver(validationSchema)
         });
 
-  const onSubmit = (data) => {
-    console.log( errors.name && errors.name.message) 
-    console.log(data.title);
-    console.log(data.status);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const onSubmit = async (data) => {
+    try{
+         
+        console.log(response.payload);
+        navigate("/todolist");
+    }
+    catch(e){
+        console.log(e)
+    }
   }
   
   return (
@@ -47,11 +58,11 @@ const TodoForm = () => {
 
         <form onSubmit={handleSubmit(onSubmit)}>
             <div>
-                <input {...register("title")} type="text" placeholder='Title'/>
+                <input {...register("title")} type="text" placeholder='Title'/> <br></br> 
                 {errors.title && errors.title.message}
             </div>
             <div>
-                <input {...register("description")} type="text" placeholder='description'/>
+                <input {...register("description")} type="text" placeholder='Description'/> <br></br>
                 {errors.description && errors.description.message}
 
             </div>
@@ -61,7 +72,7 @@ const TodoForm = () => {
                     <option value="In Progress">In Progress</option>
                     <option value="Completed">Completed</option>
                     <option value="Cancelled">Cancelled</option>
-                </select>
+                </select> <br></br>
                 {errors.status && errors.status.message}
 
             </div>
@@ -70,19 +81,29 @@ const TodoForm = () => {
                     <option value="low">Low</option>    
                     <option value="medium">Medium</option>
                     <option value="high">High</option>
-                </select>
+                </select> <br></br>
                 {errors.priority && errors.priority.message}
 
             </div>
             <div>
-                <input {...register("dueDate")} type="date" placeholder='Due Date'/>
+                <input {...register("dueDate")} type="date" placeholder='Due Date'/> <br></br>
                 {errors.dueDate && errors.dueDate.message}
 
             </div>
 
+            <div>
+                <input {...register("update")} type="text" placeholder='Id to update, not required.'/> <br></br>
+            </div>
+
+
             <button disabled={isSubmitting} type='submit'>Submit</button>
 
         </form>
+
+        <div>
+            <Link to="/todolist">Todo List</Link>
+        </div>
+
     </div>
   )
 }
