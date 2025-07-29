@@ -11,7 +11,6 @@ const TodoFilter = () => {
     
     const todos = selector.data;
     const [originalTodos, setOriginalTodos] = useState([]);
-    //console.log(todos); //todos geliyor.
     
     
     //Search, filter and sorting terms.
@@ -23,19 +22,18 @@ const TodoFilter = () => {
     
     useEffect(() => {
         allFilterOptions();
-        
-
-
-        console.log("Çalıştı");
-        
-
-    },[sortValue, sortValueDirection, currentPriority, currentStatus]);
+    
+    },[sortValue, sortValueDirection, currentPriority, currentStatus, searchValue]);
 
     const handleSort = (param, data) => {
+        // console.log(param);
+        // console.log(data);
         var sorted = [];
-        //console.log(data);
-        if(!param || !data){
+        if(!param){
             return data;
+        }
+        else if(!data){
+            return false;
         }
         switch (param){
             case 'id': 
@@ -48,12 +46,10 @@ const TodoFilter = () => {
                 sorted = data.sort((a, b) => new Date(a.due_date) - new Date(b.due_date));
                 break;
         }   
-        //console.log(sorted.push("sorted"))
             
         if(sortValueDirection != "asc"){
             handleAngle(sorted);
         }
-    
         return sorted;
 
     }
@@ -63,9 +59,12 @@ const TodoFilter = () => {
     }
    
     const handleSearch = (val, data) => {
-
-        if(!val || !val.trim()){
-            return data;      
+        if(!val.trim()){
+            console.log(data)
+            data = [...todos];
+            console.log(todos)
+            console.log(data)
+            return data;    
         }
         else{          
             const filtered = data.filter(todo => {               
@@ -74,13 +73,15 @@ const TodoFilter = () => {
                     todo.description?.toLowerCase().includes(val.toLowerCase()) 
                 );
             });
+            //console.log(val);
+            //console.log(filtered)
             return filtered;     
         }
 
     }
 
     const handleFilterPriority = (filter, data) => {
-        if(!filter || !data){
+        if(!filter || !data || filter=="none"){
             return data;
         }else{   
             var todosAsPriority = data.filter((todo) => {
@@ -93,7 +94,7 @@ const TodoFilter = () => {
     }
 
     const handleFilterStatus = (filter, data) => {
-        if(!filter || !data){
+        if(!filter || !data || filter == "none"){
             return data;
         }
         else{
@@ -106,10 +107,7 @@ const TodoFilter = () => {
     }
 
     const allFilterOptions = () => {
-        console.log("Todos:");
-        console.log(todos);
         setOriginalTodos(todos);
-        //console.log(originalTodos);
         let data = [];
 
         if (originalTodos.length == 0) {
@@ -117,24 +115,48 @@ const TodoFilter = () => {
         } else {
             data = [...originalTodos];
         }
-        /*arama 
-        priority 
-        status
-        sıralama*/ 
 
-        console.log("Data:");
-        console.log(data);
-
+        
         data = handleSearch(searchValue, data);
 
-        data = handleFilterPriority(currentPriority, data);
-        
-        data = handleFilterStatus(currentStatus, data);
-        
+        if(!data){   
+            if (originalTodos.length == 0) {
+                data = [...todos];
+            } else {
+                data = [...originalTodos];
+            }
+        }
+
+        console.log(data);
+
+
+        if(currentPriority=="none" && currentStatus == "none"){
+            if (originalTodos.length == 0) {
+                data = [...todos];
+            } else {
+                data = [...originalTodos];
+            }
+        }
+        else if(currentPriority=="none"){
+            data = handleFilterStatus(currentStatus, data);
+        }
+        else if(currentStatus){
+            data = handleFilterPriority(currentPriority, data);
+        }
+        else{
+            data = handleFilterPriority(currentPriority, data);
+            data = handleFilterStatus(currentStatus, data);
+        }
+
+
+
+
+
         data = handleSort(sortValue, data);
         
         
-        dispatch(updateList(data));    
+        
+        //dispatch(updateList(data));    
     }
   
     return (
@@ -143,18 +165,21 @@ const TodoFilter = () => {
         <div>
             <div id='search'>
                 <input type="text" placeholder="Search.." value={searchValue} onChange={(e) => {
+                    console.log(e.target.value);
                     setSearchValue(e.target.value);
+                    //console.log("htmlde set edilen search value");
+                    //console.log(searchValue);
                     }}></input>    
             </div>
             <div id='siralama'>
                 <select value={sortValue} onChange={(e) => {
-                    console.log(e.target.value);
                     
                         setSortValue(e.target.value);
+
                     }}>
                     <option value="id">Id'ye Göre</option>
                     <option value="title">Title'a Göre</option>
-                    <option value="date">Due date'e Göre</option>
+                    <option value="date">Due Date'e Göre</option>
                 </select>
                 <select value={sortValueDirection} onChange={(e) => {
                     setSortValueDirection(e.target.value);
@@ -168,6 +193,7 @@ const TodoFilter = () => {
                 <select value={currentPriority} onChange={(e) => {
                     setCurrentPriority(e.target.value);
                 }}>
+                    <option value="none">None</option>
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
                     <option value="high">High</option>
@@ -175,6 +201,7 @@ const TodoFilter = () => {
                 <select value={currentStatus} onChange={(e) => {
                     setCurrentStatus(e.target.value);
                 }}>
+                    <option value="none">None</option>
                     <option value="pending">Pending</option>
                     <option value="in_progress">In progress</option>
                     <option value="cancelled">Cancelled</option>
