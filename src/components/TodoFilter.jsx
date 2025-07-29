@@ -1,13 +1,15 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import TodoItem from './TodoItem';
 import { updateList } from '../redux/features/todo/TodoSlice';
 
 const TodoFilter = () => {
   
+    const dispatch = useDispatch(); 
     var selector = useSelector((state) => state.todo);
     var todos = selector.data;
-    const dispatch = useDispatch(); 
+    var array = [...todos];
+    
        
     var sorted = []
     const handleSort = (e) => {
@@ -27,34 +29,54 @@ const TodoFilter = () => {
     }
 
     const handleAngle = () => {
-        sorted = [...todos].reverse();
+        var sorted = [...array].reverse();
         dispatch(updateList(sorted))       
+        setArray(sorted);
 
     }
 
+    
     const handleSearch = (e) => {
-        
+        const val = e.target.value;
 
-        if(!e.target.value.trim()){
-            dispatch(updateList(todos))      
-            return 
+        if(!val.trim()){
+            dispatch(updateList(todos))     
+        }
+        else{
+            const searchLower = val.toLowerCase();
+           
+            const filtered = todos.filter(todo => {
+                
+                return (
+                    todo.title?.toLowerCase().includes(searchLower) ||
+                    todo.description?.toLowerCase().includes(searchLower) ||
+                    todo.status?.toLowerCase().includes(searchLower) ||
+                    todo.priority?.toLowerCase().includes(searchLower)
+                );
+            });
+
+            dispatch(updateList(filtered))       
+            console.log(filtered)
         }
 
-        const filtered = todos.filter(todo => {
-            const searchLower = e.target.value.toLowerCase();
-            
-            // Multiple field search
-            return (
-                todo.title?.toLowerCase().includes(searchLower) ||
-                todo.description?.toLowerCase().includes(searchLower) ||
-                todo.status?.toLowerCase().includes(searchLower) ||
-                todo.priority?.toLowerCase().includes(searchLower)
-            );
+    }
+
+    const handleFilterPriority = (e) => {
+        var filter = e.target.value;
+
+        var todosPriority = todos.filter((todo) => {
+            return todo.priority?.toLowerCase().includes(filter.toLowerCase());
         });
+        dispatch(updateList(todosPriority));
+    }
 
-        console.log(filtered)
-        dispatch(updateList(filtered))       
+    const handleFilterStatus = (e) => {
+        var filter = e.target.value;
 
+        var todosStatus = todos.filter((todo) => {
+            return todo.status?.toLowerCase().includes(filter.toLowerCase());
+        });
+        dispatch(updateList(todosStatus));
     }
   
     return (
@@ -77,12 +99,12 @@ const TodoFilter = () => {
             </div>
             <div id='filtre'>
                 {/* status priority ve due date e göre filtreleme */}
-                <select>
+                <select onChange={handleFilterPriority}>
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
                     <option value="high">High</option>
                 </select>
-                <select>
+                <select onChange={handleFilterStatus}>
                     <option value="pending">Pending</option>
                     <option value="in_progress">In progress</option>
                     <option value="cancelled">Cancelled</option>
@@ -90,8 +112,6 @@ const TodoFilter = () => {
                 </select>
             </div>
         </div>
-
-
     </center>
   )
 }
