@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import * as Yup from "yup";
 import { Link, Route, useNavigate } from 'react-router-dom';
+import { addTodo } from '../redux/features/todo/TodoSlice';
 
 const TodoForm = () => {
   
@@ -43,8 +44,9 @@ const TodoForm = () => {
   const onSubmit = async (data) => {
     try{
          
-        console.log(response.payload);
-        navigate("/todolist");
+        console.log(data);
+        const response = await dispatch(addTodo(data));
+        console.log(response);
     }
     catch(e){
         console.log(e)
@@ -67,10 +69,10 @@ const TodoForm = () => {
             </div>
             <div>
                 <select {...register("status")}>
-                    <option value="Pending">Pending</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Completed">Completed</option>
-                    <option value="Cancelled">Cancelled</option>
+                    <option value="pending">Pending</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="completed">Completed</option>
+                    <option value="cancelled">Cancelled</option>
                 </select> <br></br>
                 {errors.status && errors.status.message}
 

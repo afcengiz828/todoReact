@@ -13,12 +13,18 @@ const initialState = {
 
 export const getAllTodo = createAsyncThunk( "gettodo" ,async () => {
     const response = await axios.get("http://localhost:8000/api/todos");
-    console.log("Api çağrısı başarılı");
+    //console.log("Api çağrısı başarılı");
     return response.data;
 })
 
 export const addTodo = createAsyncThunk( "addtodo" ,async (newTodo) => {
     const response = await axios.post("http://localhost:8000/api/todos", newTodo); 
+
+    return response;
+})
+
+export const delTodo = createAsyncThunk( "deltodo" ,async (newTodo) => {
+    const response = await axios.delete(`http://localhost:8000/api/todos/${id}`); 
 
     return response;
 })
@@ -42,7 +48,7 @@ export const TodoSlice = createSlice({
                     state.data.push(action.payload.data[i]);
 
                 state.loading = false;
-                console.log("Api sonrası işlemler başarılı.");
+                //console.log("Api sonrası işlemler başarılı.");
             })
             .addCase(getAllTodo.pending, (state) => {
                 state.loading = true;
