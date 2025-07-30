@@ -13,12 +13,15 @@ export const FilteredSlice = createSlice( {
             return state.filteredTodos;
         },
         updateFiltered : (state, action) => {
-            state.filteredTodos.push(action.payload);
+            console.log("updateFiltered çalıştı.");
+            console.log(action.payload);
+            state.filteredTodos = action.payload;
+            console.log(state.filteredTodos);
         }
   }
 });
 
-export const {  gerFiltered } = FilteredSlice.actions;
+export const {  getFiltered, updateFiltered } = FilteredSlice.actions;
 
 
 export default FilteredSlice.reducer;

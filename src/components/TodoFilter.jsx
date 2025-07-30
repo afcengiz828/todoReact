@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import TodoItem from './TodoItem';
-import { updateList } from '../redux/features/todo/TodoSlice';
+import { updateFiltered } from '../redux/features/todo/FilteredSlice';
 
 const TodoFilter = () => {
   
     const dispatch = useDispatch(); 
     var selector = useSelector((state) => state.todo);
-    
+    var filtered = useSelector((state) => state.filter);
     
     const todos = selector.data;
+
     const [originalTodos, setOriginalTodos] = useState([]);
     
     
@@ -21,27 +22,33 @@ const TodoFilter = () => {
     const [sortValue, setSortValue] = useState("id");
     
     useEffect(() => {
+        
+
         allFilterOptions();
     
     },[sortValue, sortValueDirection, currentPriority, currentStatus, searchValue]);
 
+    useEffect(() => {
+        const todos = selector.data;
+        dispatch(updateFiltered(todos));
+
+    },[todos])
+
     const handleSort = (param, data) => {
         // console.log(param);
         // console.log(data);
+        console.log("handleSort çalıştı.")
         var sorted = [];
-        if(!param){
+        if(!param || !data){
             return data;
-        }
-        else if(!data){
-            return false;
         }
         switch (param){
             case 'id': 
-            sorted = data.sort((a, b) => a.id - b.id);
-            break;
+                sorted = data.sort((a, b) => a.id - b.id);
+                break;
             case 'title': 
-            sorted = data.sort((a, b) => a.title.localeCompare(b.title));
-            break;
+                sorted = data.sort((a, b) => a.title.localeCompare(b.title));
+                break;
             case 'date':
                 sorted = data.sort((a, b) => new Date(a.due_date) - new Date(b.due_date));
                 break;
@@ -50,6 +57,8 @@ const TodoFilter = () => {
         if(sortValueDirection != "asc"){
             handleAngle(sorted);
         }
+        console.log("handlesort daki data nın son hali:")
+        console.log(sorted)
         return sorted;
 
     }
@@ -60,10 +69,7 @@ const TodoFilter = () => {
    
     const handleSearch = (val, data) => {
         if(!val.trim()){
-            console.log(data)
             data = [...todos];
-            console.log(todos)
-            console.log(data)
             return data;    
         }
         else{          
@@ -110,13 +116,16 @@ const TodoFilter = () => {
         setOriginalTodos(todos);
         let data = [];
 
+        
         if (originalTodos.length == 0) {
             data = [...todos];
         } else {
             data = [...originalTodos];
         }
-
         
+        dispatch(updateFiltered(todos));
+        //console.log(filtered.filteredTodos);
+       
         data = handleSearch(searchValue, data);
 
         if(!data){   
@@ -127,7 +136,6 @@ const TodoFilter = () => {
             }
         }
 
-        console.log(data);
 
 
         if(currentPriority=="none" && currentStatus == "none"){
@@ -137,10 +145,10 @@ const TodoFilter = () => {
                 data = [...originalTodos];
             }
         }
-        else if(currentPriority=="none"){
+        else if(currentPriority=="none" && currentStatus!="none"){
             data = handleFilterStatus(currentStatus, data);
         }
-        else if(currentStatus){
+        else if(currentStatus=="none"){
             data = handleFilterPriority(currentPriority, data);
         }
         else{
@@ -148,15 +156,11 @@ const TodoFilter = () => {
             data = handleFilterStatus(currentStatus, data);
         }
 
-
-
-
-
-        data = handleSort(sortValue, data);
+        data = handleSort(sortValue, data);      
+        console.log("maindeki datanın son hali: ");
+        console.log(data);
         
-        
-        
-        //dispatch(updateList(data));    
+        dispatch(updateFiltered(data));    
     }
   
     return (

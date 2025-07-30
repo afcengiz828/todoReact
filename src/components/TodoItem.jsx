@@ -1,19 +1,11 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 const TodoItem = ({idList}) => {
-    const selector = useSelector((state) => state.todo);
-    var elements = [];
+    const selector = useSelector((state) => state.filter);
     
-    for(let i=0;i<idList.length;i++){
-
-        selector.data.forEach(element => {
-            
-            if(element.id == idList[i]){
-                elements.push(element); 
-            } 
-        });
-    }
+    
+    
   return (
     <div> 
         <table>
@@ -31,7 +23,7 @@ const TodoItem = ({idList}) => {
                 </tr>   
             </thead>
             <tbody>
-                {elements.map((c) => {
+                {selector.filteredTodos.map((c) => {
                     return (
                         <tr key={c.id}>
                             <td>{c.id}</td>
