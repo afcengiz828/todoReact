@@ -4,35 +4,48 @@ import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from "yup";
-import { Link, Route, useNavigate } from 'react-router-dom';
+import { Link, Route, useNavigate, useParams } from 'react-router-dom';
 import { addTodo, getAllTodo, updateTodo } from '../redux/features/todo/TodoSlice';
-import { addFiltered } from '../redux/features/todo/FilteredSlice';
+import { addFiltered, updateFiltered } from '../redux/features/todo/FilteredSlice';
 
-const TodoForm = () => {
+const TodoForm = ({}) => {
   
   const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
+                    
 
   const validationSchema = Yup.object({
-        title: Yup.string().required("Title is required.")
-            .min(5, "Title must be 3 character at least")
-            .max(100, "Title must be max 100 character"),
+        title: Yup.string().min(5, "Title must be 3 character at least")
+            .max(200, "Title must be max 100 character"),
         description : Yup.string().max(500, "Description must be max 500 character"),
         status: Yup.string().required("Status is required."),
         priority: Yup.string(),
         dueDate: Yup.string()
-            .matches(dateRegex, "Please enter date in the valid format")
+            .test("date-format", "Please enter date in the valid format", (value) => {
+                if (!value || value.trim() === '') return true;
+                return dateRegex.test(value);
+            })
             .test("valid-date", "Please enter a valid date", (value) => {
-                const date = parse(value, "yyyy-mm-dd", new Date());
-                return isValid(date);
+                if(value){
+
+                    const date = parse(value, "yyyy-MM-dd", new Date());
+                    return isValid(date);
+                }
+                return true;
             })
             .test("upper-today", "Please enter a future day.", (value) => {
-                const date = parse(value, "yyyy-MM-dd", new Date());
-                const today = new Date();
-                return date > today;
+                if(value){
+
+                    const date = parse(value, "yyyy-MM-dd", new Date());
+                    const today = new Date();
+                    return date > today;
+                }
+                return true
             })
   });
 
   const {register, 
+         watch,
+         setValue,
          handleSubmit, 
          formState : {errors, isSubmitting} //isSubmitting form submit olup gönderilme sürecinde olup olmadığını tutan değer
         } = useForm({
@@ -40,8 +53,9 @@ const TodoForm = () => {
         });
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   var selector = useSelector(state => state.filter);
+
+  const {idTodo} = useParams();
   const [todos, setTodos] = useState([]);
 
   useEffect(() => {
@@ -50,13 +64,39 @@ const TodoForm = () => {
 
   },[selector.filteredTodos])
 
-  const handelChangeUpdate = (e) => {
+  useEffect( () => {
+    if(idTodo){
+        console.log(idTodo);
+        setValue("id", idTodo);
+        handelChangeUpdate(idTodo);
+    }
+  },[idTodo, todos])
+
+  const handelChangeUpdate = (id) => {
     
-    const id = e.target.value;
+    var formvals = null;
+    //console.log(todos)
+    //const todoIdList = todos.data.map( (todo) => todo.id);
+    //console.log(todoIdList); 
+    setValue("title", "");
+    setValue("description", "");
+    setValue("status", "status");
+    setValue("priority", "priority");            
+    setValue("dueDate", "");
 
     todos.forEach(todo => {
-        if(todo.id == id && id.trim()){
-            
+
+        if(todo.id == Number(id) && id.trim()){
+
+            setValue("title", todo.title);
+            console.log(todo.title);
+            setValue("description", todo.description ? todo.description : "");
+            setValue("status", todo.status);
+            setValue("priority", todo.priority);            
+            setValue("dueDate", todo.due_date ? todo.due_date.split(" ")[0] : "");      
+            formvals = watch();
+            console.log(formvals);
+
         }
     });
 
@@ -66,8 +106,10 @@ const TodoForm = () => {
 
   const onSubmit = async (data) => {
       console.log(data);
-    if( !data.update && !Number.isInteger(data.update) ){
 
+    if( !data.id ){
+        console.log("data boş add çalıştı.")
+        console.log(data)
         try{
             const response = await dispatch(addTodo(data));
             //while(!selector.filteredData);
@@ -79,7 +121,16 @@ const TodoForm = () => {
             console.log(e)
         }
     }
-    else if ( data.update && Number.isInteger(data.update) ){
+    else{
+
+        try{
+            data.id = Number(data.id);
+        }catch(e){
+            console.log(e);
+        }
+
+        console.log("data var update çalıştı.")
+
         try{
             const response = await dispatch(updateTodo(data));
             //while(!selector.filteredData);
@@ -92,6 +143,8 @@ const TodoForm = () => {
         }
     }
 
+    console.log("onsubmit çalıştı")
+
   }
   
   return (
@@ -100,7 +153,7 @@ const TodoForm = () => {
 
         <form onSubmit={handleSubmit(onSubmit)}>
             <div>
-                <input {...register("title")} value="" type="text" placeholder='Title'/> <br></br> 
+                <input {...register("title")} type="text" placeholder='Title'/> <br></br> 
                 {errors.title && errors.title.message}
             </div>
             <div>
@@ -110,8 +163,9 @@ const TodoForm = () => {
             </div>
             <div>
                 <select {...register("status")}>
+                    <option value="status">Status</option>
                     <option value="pending">Pending</option>
-                    <option value="in_progress">In Progress</option>
+                    <option value="in_progress">In Progress</option>    
                     <option value="completed">Completed</option>
                     <option value="cancelled">Cancelled</option>
                 </select> <br/>
@@ -120,6 +174,7 @@ const TodoForm = () => {
             </div>
             <div>
                 <select {...register("priority")}>
+                    <option value="priority">Priority</option>
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
                     <option value="high">High</option>
@@ -128,14 +183,14 @@ const TodoForm = () => {
 
             </div>
             <div>
-                <input {...register("dueDate")} type="date" value="" placeholder='Due Date'/> <br/> 
+                <input {...register("dueDate")} type="date" placeholder='Due Date'/> <br/> 
                 {errors.dueDate && errors.dueDate.message}
 
             </div>
 
             <div>
-                <input {...register("update")} onChange={(e) => {
-                    handelChangeUpdate(e);
+                <input {...register("id")} onChange={(e) => {
+                    handelChangeUpdate(e.target.value);
                 }} type="text" placeholder='Id to update, not required.'/> <br/>
             </div>
 

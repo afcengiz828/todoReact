@@ -10,24 +10,24 @@ export const FilteredSlice = createSlice( {
   initialState,
   reducers:{
         setFiltered : (state, action) => {
-            console.log(action.payload);
+            //console.log(action.payload);
             
             if(!action.payload){
             }
             else{
                 state.filteredTodos = action.payload;
-                console.log(state.filteredTodos);
+                //console.log(state.filteredTodos);
             }
 
         },
         addFiltered : (state, action) => {
-            console.log('Current todos:', current(state.filteredTodos));
+            //console.log('Current todos:', current(state.filteredTodos));
             //console.log(current(state.filteredTodos));
             //console.log('New todo:', action.payload);
             if (action.payload && action.payload !== undefined) {}
                 state.filteredTodos = [...current(state.filteredTodos) , action.payload];
             
-            console.log('Updated todos:', state.filteredTodos);
+            //console.log('Updated todos:', state.filteredTodos);
         },
         updateFiltered : (state, action) => {
             //console.log(action.payload);

@@ -1,7 +1,7 @@
 import React from 'react'
 import TodoForm from '../components/TodoForm'
 
-const TodoDetail = () => {
+const TodoDetail = ({idTodo}) => {
   return (
     <div>
         <center>

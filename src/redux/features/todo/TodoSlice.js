@@ -21,6 +21,7 @@ export const getAllTodo = createAsyncThunk( "gettodo" ,async () => {
 export const addTodo = createAsyncThunk( "addtodo" , async (newTodo) => {
 
     console.log("addTodo içindeki json verisi");
+    console.log(newTodo);   
     const response = await axios.post("http://localhost:8000/api/todos", newTodo); 
     console.log(response.data.data);
     return response.data.data;

@@ -12,7 +12,8 @@ const AppRouter = () => {
     <>
         <Routes>
             <Route path='/' element={<Dashboard/>}/>
-            <Route path='/tododetail' element={<TodoDetail/>}/>
+            <Route path='/dashboard' element={<Dashboard/>}/>
+            <Route path= "/tododetail/:idTodo?"element={<TodoDetail/>}/>
             <Route path='/todolist' element={<TodoListPage/>}/>
         </Routes>
     </>
