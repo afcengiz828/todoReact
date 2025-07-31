@@ -28,37 +28,34 @@ const TodoFilter = () => {
     
     },[sortValue, sortValueDirection, currentPriority, currentStatus, searchValue]);
 
-    useEffect(() => {
-        const todos = selector.data;
-        dispatch(updateFiltered(todos));
-
-    },[todos])
+//     useEffect(() => {
+        
+// const todos = selector.data;
+//         dispatch(updateFiltered(todos));
+//     },[todos])
 
     const handleSort = (param, data) => {
-        // console.log(param);
-        // console.log(data);
-        console.log("handleSort çalıştı.")
+        
         var sorted = [];
         if(!param || !data){
             return data;
         }
         switch (param){
             case 'id': 
-                sorted = data.sort((a, b) => a.id - b.id);
+                sorted = [...data].sort((a, b) => a.id - b.id);
                 break;
             case 'title': 
-                sorted = data.sort((a, b) => a.title.localeCompare(b.title));
+                sorted = [...data].sort((a, b) => a.title.localeCompare(b.title));
                 break;
             case 'date':
-                sorted = data.sort((a, b) => new Date(a.due_date) - new Date(b.due_date));
+                sorted = [...data].sort((a, b) => new Date(a.due_date) - new Date(b.due_date));
                 break;
         }   
             
         if(sortValueDirection != "asc"){
             handleAngle(sorted);
         }
-        console.log("handlesort daki data nın son hali:")
-        console.log(sorted)
+       
         return sorted;
 
     }
@@ -79,8 +76,7 @@ const TodoFilter = () => {
                     todo.description?.toLowerCase().includes(val.toLowerCase()) 
                 );
             });
-            //console.log(val);
-            //console.log(filtered)
+            
             return filtered;     
         }
 
@@ -113,9 +109,10 @@ const TodoFilter = () => {
     }
 
     const allFilterOptions = () => {
-        setOriginalTodos(todos);
         let data = [];
-
+        
+        const todos = selector.data;
+        setOriginalTodos(todos);
         
         if (originalTodos.length == 0) {
             data = [...todos];
@@ -123,8 +120,7 @@ const TodoFilter = () => {
             data = [...originalTodos];
         }
         
-        dispatch(updateFiltered(todos));
-        //console.log(filtered.filteredTodos);
+       
        
         data = handleSearch(searchValue, data);
 
@@ -156,9 +152,7 @@ const TodoFilter = () => {
             data = handleFilterStatus(currentStatus, data);
         }
 
-        data = handleSort(sortValue, data);      
-        console.log("maindeki datanın son hali: ");
-        console.log(data);
+        data = handleSort(sortValue, data);  
         
         dispatch(updateFiltered(data));    
     }
@@ -169,10 +163,7 @@ const TodoFilter = () => {
         <div>
             <div id='search'>
                 <input type="text" placeholder="Search.." value={searchValue} onChange={(e) => {
-                    console.log(e.target.value);
-                    setSearchValue(e.target.value);
-                    //console.log("htmlde set edilen search value");
-                    //console.log(searchValue);
+                        setSearchValue(e.target.value);
                     }}></input>    
             </div>
             <div id='siralama'>
@@ -197,7 +188,7 @@ const TodoFilter = () => {
                 <select value={currentPriority} onChange={(e) => {
                     setCurrentPriority(e.target.value);
                 }}>
-                    <option value="none">None</option>
+                    <option value="none">Priority</option>
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
                     <option value="high">High</option>
@@ -205,7 +196,7 @@ const TodoFilter = () => {
                 <select value={currentStatus} onChange={(e) => {
                     setCurrentStatus(e.target.value);
                 }}>
-                    <option value="none">None</option>
+                    <option value="none">Status</option>
                     <option value="pending">Pending</option>
                     <option value="in_progress">In progress</option>
                     <option value="cancelled">Cancelled</option>

@@ -6,25 +6,40 @@ const initialState = {
     status : "",
     messages: "",
     data: [],
-    loading : false,
+    loading : true,
     error: null
 
 }
 
 export const getAllTodo = createAsyncThunk( "gettodo" ,async () => {
     const response = await axios.get("http://localhost:8000/api/todos");
-    //console.log("Api çağrısı başarılı");
+    // console.log("Api çağrısı başarılı");
+    // console.log(response.data.data);
     return response.data;
 })
 
-export const addTodo = createAsyncThunk( "addtodo" ,async (newTodo) => {
+export const addTodo = createAsyncThunk( "addtodo" , async (newTodo) => {
+
+    console.log("addTodo içindeki json verisi");
     const response = await axios.post("http://localhost:8000/api/todos", newTodo); 
+    console.log(response.data.data);
+    return response.data.data;
+})
+
+export const delTodo = createAsyncThunk( "deltodo" ,async (id) => {
+    const response = await axios.delete(`http://localhost:8000/api/todos/${id}`); 
 
     return response;
 })
 
-export const delTodo = createAsyncThunk( "deltodo" ,async (newTodo) => {
-    const response = await axios.delete(`http://localhost:8000/api/todos/${id}`); 
+export const updateTodo = createAsyncThunk( "puttodo" ,async (newTodo) => {
+    const response = await axios.put(`http://localhost:8000/api/todos/${newTodo.id}`, newTodo); 
+
+    return response;
+})
+
+export const updateTodoStatus = createAsyncThunk( "deltodo" ,async (newTodo) => {
+    const response = await axios.patch(`http://localhost:8000/api/todos/${newTodo.id}`, newTodo); 
 
     return response;
 })
@@ -44,13 +59,14 @@ export const TodoSlice = createSlice({
                 //console.log(action.payload);
                 state.status = action.payload.status;
                 state.messages = action.payload.messages;
-                for(var i = 0; i<Object.keys(action.payload.data).length; i++)
-                    state.data.push(action.payload.data[i]);
+               
+                state.data = action.payload.data;
 
                 state.loading = false;
                 //console.log("Api sonrası işlemler başarılı.");
             })
             .addCase(getAllTodo.pending, (state) => {
+                //onsole.log("pending")
                 state.loading = true;
                 
             })
@@ -70,6 +86,7 @@ export const TodoSlice = createSlice({
             })
             .addCase(addTodo.rejected, (state, action) => {
                 state.error = action.payload;
+                console.log(action.payload.status);
                 state.status = action.payload.status;
                 state.loading = false;
             })

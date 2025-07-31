@@ -1,11 +1,12 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { isValid, parse } from 'date-fns';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from "yup";
 import { Link, Route, useNavigate } from 'react-router-dom';
-import { addTodo } from '../redux/features/todo/TodoSlice';
+import { addTodo, getAllTodo, updateTodo } from '../redux/features/todo/TodoSlice';
+import { addFiltered } from '../redux/features/todo/FilteredSlice';
 
 const TodoForm = () => {
   
@@ -40,17 +41,57 @@ const TodoForm = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  var selector = useSelector(state => state.filter);
+  const [todos, setTodos] = useState([]);
+
+  useEffect(() => {
+
+    setTodos(selector.filteredTodos);
+
+  },[selector.filteredTodos])
+
+  const handelChangeUpdate = (e) => {
+    
+    const id = e.target.value;
+
+    todos.forEach(todo => {
+        if(todo.id == id && id.trim()){
+            
+        }
+    });
+
+    //console.log(todos);
+    //console.log(id);
+  };
 
   const onSubmit = async (data) => {
-    try{
-         
-        console.log(data);
-        const response = await dispatch(addTodo(data));
-        console.log(response);
+      console.log(data);
+    if( !data.update && !Number.isInteger(data.update) ){
+
+        try{
+            const response = await dispatch(addTodo(data));
+            //while(!selector.filteredData);
+            dispatch(addFiltered(response.payload));
+            console.log(selector.filteredTodos); 
+            console.log(response);
+        }
+        catch(e){
+            console.log(e)
+        }
     }
-    catch(e){
-        console.log(e)
+    else if ( data.update && Number.isInteger(data.update) ){
+        try{
+            const response = await dispatch(updateTodo(data));
+            //while(!selector.filteredData);
+            dispatch(updateFiltered(response.payload));
+            console.log(selector.filteredTodos); 
+            console.log(response);
+        }
+        catch(e){
+            console.log(e)
+        }
     }
+
   }
   
   return (
@@ -59,11 +100,11 @@ const TodoForm = () => {
 
         <form onSubmit={handleSubmit(onSubmit)}>
             <div>
-                <input {...register("title")} type="text" placeholder='Title'/> <br></br> 
+                <input {...register("title")} value="" type="text" placeholder='Title'/> <br></br> 
                 {errors.title && errors.title.message}
             </div>
             <div>
-                <input {...register("description")} type="text" placeholder='Description'/> <br></br>
+                <input {...register("description")} type="text" placeholder='Description'/> <br/>
                 {errors.description && errors.description.message}
 
             </div>
@@ -73,27 +114,29 @@ const TodoForm = () => {
                     <option value="in_progress">In Progress</option>
                     <option value="completed">Completed</option>
                     <option value="cancelled">Cancelled</option>
-                </select> <br></br>
+                </select> <br/>
                 {errors.status && errors.status.message}
 
             </div>
             <div>
                 <select {...register("priority")}>
-                    <option value="low">Low</option>    
+                    <option value="low">Low</option>
                     <option value="medium">Medium</option>
                     <option value="high">High</option>
-                </select> <br></br>
+                </select> <br/>
                 {errors.priority && errors.priority.message}
 
             </div>
             <div>
-                <input {...register("dueDate")} type="date" placeholder='Due Date'/> <br></br>
+                <input {...register("dueDate")} type="date" value="" placeholder='Due Date'/> <br/> 
                 {errors.dueDate && errors.dueDate.message}
 
             </div>
 
             <div>
-                <input {...register("update")} type="text" placeholder='Id to update, not required.'/> <br></br>
+                <input {...register("update")} onChange={(e) => {
+                    handelChangeUpdate(e);
+                }} type="text" placeholder='Id to update, not required.'/> <br/>
             </div>
 
 
@@ -101,9 +144,7 @@ const TodoForm = () => {
 
         </form>
 
-        <div>
-            <Link to="/todolist">Todo List</Link>
-        </div>
+        
 
     </div>
   )
