@@ -6,13 +6,14 @@ const initialState = {
     status : "",
     messages: "",
     data: [],
+    dataCount : 0,
     loading : true,
     error: null
 
 }
 
-export const getAllTodo = createAsyncThunk( "gettodo" ,async () => {
-    const response = await axios.get("http://localhost:8000/api/todos");
+export const getAllTodo = createAsyncThunk( "gettodo" ,async (url) => {
+        const response = await axios.get(`http://localhost:8000/api/todos/${url}`);  
     // console.log("Api çağrısı başarılı");
     // console.log(response.data.data);
     return response.data;
@@ -64,6 +65,7 @@ export const TodoSlice = createSlice({
                 state.messages = action.payload.messages;
                
                 state.data = action.payload.data;
+                state.dataCount = action.payload.count;
 
                 state.loading = false;
                 //console.log("Api sonrası işlemler başarılı.");

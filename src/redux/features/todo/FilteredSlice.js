@@ -3,6 +3,7 @@ import React, { act } from 'react'
 
 const initialState = {
     filteredTodos : [],
+    dataCount : 0
 }
 
 export const FilteredSlice = createSlice( {
@@ -12,11 +13,9 @@ export const FilteredSlice = createSlice( {
         setFiltered : (state, action) => {
             //console.log(action.payload);
             
-            if(!action.payload){
-            }
-            else{
+            if(action.payload){
                 state.filteredTodos = action.payload;
-                //console.log(state.filteredTodos);
+                state.dataCount = action.payload.length;
             }
 
         },

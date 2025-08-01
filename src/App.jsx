@@ -15,12 +15,12 @@ function App() {
 
 
   async function fetchData() {
-      await dispatch(getAllTodo()).then((response) => {
+      await dispatch(getAllTodo("?page=1&limit=10")).then((response) => {
           if(response.type == "gettodo/fulfilled"){
               console.log("Veri başarıyla yüklendi.", response);
           }    
           else {
-            console.log(response)
+            console.log(response);
           }      
       })
     }

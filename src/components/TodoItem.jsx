@@ -3,10 +3,34 @@ import { useDispatch, useSelector } from 'react-redux'
 import { delTodo, getAllTodo, updateTodoStatus } from '../redux/features/todo/TodoSlice';
 import { Link, Links } from 'react-router-dom';
 import TodoDetail from '../pages/TodoDetail';
+import ReactPaginate from 'react-paginate';
 
 const TodoItem = () => {
     const selector = useSelector((state) => state.filter);
+    const todoSelector = useSelector((state) => state.todo);
     const dispatch = useDispatch();
+    const [pageCount, setPageCount] = useState();
+
+    var limit = 10
+
+    useEffect(() => {
+        var count = Math.ceil(todoSelector.dataCount / 10);
+        setPageCount(count);
+    },[selector.filteredTodos])
+
+    async function fetchData(page, limit) {     
+        if (!limit) {
+            limit = 10
+        }
+        await dispatch(getAllTodo(`?page=${page}&limit=${limit}`)).then((response) => {
+            if (response.type == "gettodo/fulfilled") {
+                console.log("Veri başarıyla yüklendi.", response);
+            }
+            else {
+                console.log(response);
+            }
+        })
+    }
 
     const handleDelete = async (e, id) => {
         await dispatch(delTodo(id));
@@ -17,10 +41,10 @@ const TodoItem = () => {
     const handleStatus = async (e, id) => {
         console.log(e.target.value);
         const idObj = {
-            "id" : id
+            "id": id
         }
         const dataObj = {
-            "status" : e.target.value,
+            "status": e.target.value,
         }
         const data = {
             idObj,
@@ -31,6 +55,11 @@ const TodoItem = () => {
         window.location.reload(); //Alternatif ne kullanabiliriz sayfayı yenilemeden sadece render edecek birşey.
 
         console.log(response);
+    }
+
+    const handlePageClick = (data) => {
+        console.log(data.selected + 1);
+        fetchData(data.selected + 1, 10);
     }
 
     return (
@@ -72,8 +101,8 @@ const TodoItem = () => {
 
                                 <td>
                                     <select value={c.status} onChange={(e) => {
-                                    handleStatus(e, c.id)
-                                }}>
+                                        handleStatus(e, c.id)
+                                    }}>
                                         <option value="status">Status</option>
                                         <option value="pending">Pending</option>
                                         <option value="in_progress">In Progress</option>
@@ -101,6 +130,17 @@ const TodoItem = () => {
                     })}
                 </tbody>
             </table>
+
+            <ReactPaginate
+                previousLabel={"<<"}
+                nextLabel={">>"}
+                breakLabel={"..."}
+                pageCount={pageCount}
+                marginPagesDisplayed={2}
+                pageRangeDisplayed={3}
+                onPageChange={handlePageClick}
+
+            />
         </div>
     )
 }
