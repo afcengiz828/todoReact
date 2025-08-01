@@ -1,40 +1,61 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { delTodo, getAllTodo, updateTodoStatus } from '../redux/features/todo/TodoSlice';
-import { Link, Links } from 'react-router-dom';
-import TodoDetail from '../pages/TodoDetail';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { delTodo, updateTodoStatus } from '../../redux/features/todo/TodoSlice';
 
-const TodoItem = () => {
-    const selector = useSelector((state) => state.filter);
+const IncomingTodos = () => {
+
+    const selector = useSelector(state => state.todo);
+    const [data, setData] = useState([]);
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        
+        getTodosByDate();
+
+    }, [selector.data]);
 
     const handleDelete = async (e, id) => {
         await dispatch(delTodo(id));
         window.location.reload(); //Alternatif ne kullanabiliriz sayfayı yenilemeden sadece render edecek birşey.
 
     }
+    
 
     const handleStatus = async (e, id) => {
-        console.log(e.target.value);
-        const idObj = {
-            "id" : id
+            console.log(e.target.value);
+            const idObj = {
+                "id" : id
+            }
+            const dataObj = {
+                "status" : e.target.value,
+            }
+            const data = {
+                idObj,
+                dataObj
+            }
+            console.log(data)
+            const response = await dispatch(updateTodoStatus(data));
+            window.location.reload(); //Alternatif ne kullanabiliriz sayfayı yenilemeden sadece render edecek birşey.
+    
+            console.log(response);
         }
-        const dataObj = {
-            "status" : e.target.value,
-        }
-        const data = {
-            idObj,
-            dataObj
-        }
-        console.log(data)
-        const response = await dispatch(updateTodoStatus(data));
-        window.location.reload(); //Alternatif ne kullanabiliriz sayfayı yenilemeden sadece render edecek birşey.
 
-        console.log(response);
+    const getTodosByDate = () => {
+        const today = new Date();
+        const date = new Date();
+
+        date.setDate(today.getDate() + 30);
+        
+        const todos = selector.data.filter(todo => todo.due_date < date);
+        setData(todos);
+        return todos;
     }
 
+
     return (
-        <div>
+        <>
+            <div>
             <table>
                 <thead>
                     <tr>
@@ -53,7 +74,7 @@ const TodoItem = () => {
                     {/*console.log(selector.filteredTodos)*/}
 
 
-                    {selector.filteredTodos?.map((c) => {
+                    {data?.map((c) => {
                         return (
 
 
@@ -63,7 +84,6 @@ const TodoItem = () => {
                                     <Link to={`/tododetail/${c.id}`} >
 
                                         {c.title}
-
                                     </Link>
 
                                 </td>
@@ -102,7 +122,8 @@ const TodoItem = () => {
                 </tbody>
             </table>
         </div>
+        </>
     )
 }
 
-export default TodoItem
+export default IncomingTodos
