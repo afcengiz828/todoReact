@@ -69,11 +69,13 @@ const TodoForm = ({}) => {
         console.log(idTodo);
         setValue("id", idTodo);
         handelChangeUpdate(idTodo);
+    }else{
+
     }
   },[idTodo, todos])
 
   const handelChangeUpdate = (id) => {
-    
+    console.log("handlechangeupdate çalıştı.", id);
     var formvals = null;
     //console.log(todos)
     //const todoIdList = todos.data.map( (todo) => todo.id);
@@ -83,24 +85,27 @@ const TodoForm = ({}) => {
     setValue("status", "status");
     setValue("priority", "priority");            
     setValue("dueDate", "");
-
-    todos.forEach(todo => {
-
-        if(todo.id == Number(id) && id.trim()){
-
-            setValue("title", todo.title);
-            console.log(todo.title);
-            setValue("description", todo.description ? todo.description : "");
-            setValue("status", todo.status);
-            setValue("priority", todo.priority);            
-            setValue("dueDate", todo.due_date ? todo.due_date.split(" ")[0] : "");      
-            formvals = watch();
-            console.log(formvals);
-
-        }
-    });
-
-    //console.log(todos);
+    console.log(todos);
+    if(todos){
+        console.log("todos boş değil");
+        todos.forEach(todo => {
+            console.log("Döngüye girdi");
+            if(todo.id == Number(id) && id.trim()){
+                console.log("if bloğu çalıştı");
+                setValue("title", todo.title);
+                console.log(todo.title);
+                setValue("description", todo.description ? todo.description : "");
+                setValue("status", todo.status);
+                setValue("priority", todo.priority);            
+                setValue("dueDate", todo.due_date ? todo.due_date.split("T")[0] : "");      
+                formvals = watch();
+                console.log(formvals);
+                
+            }
+        });
+    }
+        
+        //console.log(todos);
     //console.log(id);
   };
 

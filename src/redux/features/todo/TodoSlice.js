@@ -39,9 +39,11 @@ export const updateTodo = createAsyncThunk( "puttodo" ,async (newTodo) => {
     return response;
 })
 
-export const updateTodoStatus = createAsyncThunk( "deltodo" ,async (newTodo) => {
-    const response = await axios.patch(`http://localhost:8000/api/todos/${newTodo.id}`, newTodo); 
-
+export const updateTodoStatus = createAsyncThunk( "updatetodostatus" ,async (data) => {
+    console.log(data);
+    const response = await axios.patch(`http://localhost:8000/api/todos/${data.idObj.id}`, data.dataObj); 
+    console.log("Response");
+    console.log(response);
     return response;
 })
 
@@ -86,6 +88,21 @@ export const TodoSlice = createSlice({
                 
             })
             .addCase(addTodo.rejected, (state, action) => {
+                state.error = action.payload;
+                console.log(action.payload.status);
+                state.status = action.payload.status;
+                state.loading = false;
+            })
+            .addCase(updateTodoStatus.fulfilled, (state, action) => {
+                console.log(action.payload);
+                
+                state.loading = false;
+            })
+            .addCase(updateTodoStatus.pending, (state) => {
+                state.loading = true;
+                
+            })
+            .addCase(updateTodoStatus.rejected, (state, action) => {
                 state.error = action.payload;
                 console.log(action.payload.status);
                 state.status = action.payload.status;
