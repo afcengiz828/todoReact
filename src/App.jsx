@@ -6,6 +6,7 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllTodo } from './redux/features/todo/TodoSlice'
 import { setFiltered, updateFiltered } from './redux/features/todo/FilteredSlice'
+import { setAllTodos } from './redux/features/todo/AllTodoSlice'
 
 function App() {
   const dispatch = useDispatch();
@@ -15,7 +16,7 @@ function App() {
 
 
   async function fetchData() {
-      await dispatch(getAllTodo("?page=1&limit=10")).then((response) => {
+      await dispatch(getAllTodo("")).then((response) => {
           if(response.type == "gettodo/fulfilled"){
               console.log("Veri başarıyla yüklendi.", response);
           }    
@@ -30,12 +31,13 @@ function App() {
     },[])
 
     useEffect(() => {
-      console.log(selectorTodo.data);
       if(selectorTodo.data){
-            dispatch(setFiltered(selectorTodo.data));
-            //console.log("filtered todos");
-            //console.log(selector.filteredTodos);       // Neden burada yakalayamıyorum.      
+            dispatch(setFiltered(selectorTodo.data)); 
       } 
+      if( selectorTodo.data && selectorTodo.data.length == selectorTodo.dataCount){
+        dispatch(setAllTodos(selectorTodo.data));
+      }
+
     },[selectorTodo.data]);
     
     // useEffect(() => {

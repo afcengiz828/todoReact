@@ -18,12 +18,10 @@ const Dashboard = () => {
           <SpecialStats />
         </table>
 
+      <IncomingTodos/>
+      
       </center>
 
-      <IncomingTodos/>
-      <div>
-        Dashboard page
-      </div>
     </>
   )
 }

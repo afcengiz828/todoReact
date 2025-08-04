@@ -4,210 +4,210 @@ import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from "yup";
-import { Link, Route, useNavigate, useParams } from 'react-router-dom';
+import { Link, Route, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { addTodo, getAllTodo, updateTodo } from '../redux/features/todo/TodoSlice';
 import { addFiltered, updateFiltered } from '../redux/features/todo/FilteredSlice';
+import { format } from 'date-fns';
 
 const TodoForm = ({}) => {
-  
-  const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
-                    
 
-  const validationSchema = Yup.object({
+    const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
+
+
+    const validationSchema = Yup.object({
         title: Yup.string().min(5, "Title must be 3 character at least")
             .max(200, "Title must be max 100 character"),
-        description : Yup.string().max(500, "Description must be max 500 character"),
+        description: Yup.string().max(500, "Description must be max 500 character"),
         status: Yup.string().required("Status is required."),
         priority: Yup.string(),
-        dueDate: Yup.string()
+        due_date: Yup.string()
             .test("date-format", "Please enter date in the valid format", (value) => {
                 if (!value || value.trim() === '') return true;
                 return dateRegex.test(value);
             })
             .test("valid-date", "Please enter a valid date", (value) => {
-                if(value){
-
+                if (value) {
                     const date = parse(value, "yyyy-MM-dd", new Date());
                     return isValid(date);
                 }
                 return true;
             })
             .test("upper-today", "Please enter a future day.", (value) => {
-                if(value){
-
+                if (value) {
                     const date = parse(value, "yyyy-MM-dd", new Date());
                     const today = new Date();
                     return date > today;
                 }
                 return true
             })
-  });
+    });
 
-  const {register, 
-         watch,
-         setValue,
-         handleSubmit, 
-         formState : {errors, isSubmitting} //isSubmitting form submit olup gönderilme sürecinde olup olmadığını tutan değer
-        } = useForm({
-            resolver : yupResolver(validationSchema)
-        });
+    const { register,
+        setValue,
+        handleSubmit,
+        formState: { errors, isSubmitting } //isSubmitting form submit olup gönderilme sürecinde olup olmadığını tutan değer
+    } = useForm({
+        resolver: yupResolver(validationSchema)
+    });
 
-  const dispatch = useDispatch();
-  var selector = useSelector(state => state.filter);
+    const dispatch = useDispatch();
+    const location = useLocation();
+    var selector = useSelector(state => state.filter);
 
-  const {idTodo} = useParams();
-  const [todos, setTodos] = useState([]);
+    const { idTodo } = useParams();
+    const [todos, setTodos] = useState([]);
 
-  useEffect(() => {
+    useEffect(() => {
+        if (selector.filteredTodos.length > 0) { 
+            //console.log("Filtered todos");
+            //console.log(selector.filteredTodos);
+            setTodos(selector.filteredTodos);
+        }
 
-    setTodos(selector.filteredTodos);
+        setValue("title", "");
+        setValue("description", "");
+        setValue("status", "status");
+        setValue("priority", "priority");
+        setValue("due_date", "");
+        // console.log("Form verileri sıfırlandı.");
 
-  },[selector.filteredTodos])
+    }, [selector.filteredTodos])
 
-  useEffect( () => {
-    if(idTodo){
-        console.log(idTodo);
-        setValue("id", idTodo);
-        handelChangeUpdate(idTodo);
-    }else{
+    useEffect(() => {
+        if (idTodo) {
+            setValue("id", idTodo);
+            handelChangeUpdate(idTodo);
+        } else {
 
-    }
-  },[idTodo, todos])
+        }
+    }, [idTodo, todos])
 
-  const handelChangeUpdate = (id) => {
-    var formvals = null;
-    //console.log(todos)
-    //const todoIdList = todos.data.map( (todo) => todo.id);
-    //console.log(todoIdList); 
-    setValue("title", "");
-    setValue("description", "");
-    setValue("status", "status");
-    setValue("priority", "priority");            
-    setValue("dueDate", "");
     
-    if(todos){
-        todos.forEach(todo => {
-            if(todo.id == Number(id) && id.trim()){
-                setValue("title", todo.title);
-                setValue("description", todo.description ? todo.description : "");
-                setValue("status", todo.status);
-                setValue("priority", todo.priority);            
-                setValue("dueDate", todo.due_date ? todo.due_date.split("T")[0] : "");     
-                console.log(todo.due_date); 
-                formvals = watch();
-                
+
+    const handelChangeUpdate = (id) => {
+        var formvals = null; 
+        setValue("title", "");
+        setValue("description", "");
+        setValue("status", "status");
+        setValue("priority", "priority");
+        setValue("due_date", "");
+        if (todos) {
+            todos.forEach(todo => {
+                if (todo.id == Number(id) && id.trim()) {
+                    setValue("title", todo.title);
+                    setValue("description", todo.description ? todo.description : "");
+                    setValue("status", todo.status);
+                    setValue("priority", todo.priority);
+                    setValue("due_date", todo.due_date ? todo.due_date.split("T")[0] : "");
+
+                }
+            });
+        }
+
+    };
+
+    const onSubmit = async (data) => {
+        console.log(data);
+
+        if (data) {
+            
+            console.log( "String: ", typeof(data.due_date));
+            data.due_date = data.due_date ? new Date(data.due_date)  : data.due_date;
+            data.due_date = data.due_date ? format(data.due_date, "yyyy-MM-dd")  : data.due_date;
+            console.log("String: ", data.due_date);
+        }
+
+        if (!data.id) {
+            try {
+                // console.log(data)
+                const response = await dispatch(addTodo(data));
+                console.log(response.payload)
+                dispatch(addFiltered(response.payload));
             }
-        });
-    }
-        
-        //console.log(todos);
-    //console.log(id);
-  };
-
-  const onSubmit = async (data) => {
-      console.log(data);
-      
-      if(data){
-        data.dueDate = data.dueDate ? data.dueDate.split("T")[0] : "";
-        console.log(data)
-      }
-
-    if( !data.id ){
-        console.log("data boş add çalıştı.")
-        console.log(data)
-        try{
-            const response = await dispatch(addTodo(data));
-            //while(!selector.filteredData);
-            dispatch(addFiltered(response.payload));
-            console.log(selector.filteredTodos); 
-            console.log(response);
+            catch (e) {
+                console.log(e)
+            }
         }
-        catch(e){
-            console.log(e)
-        }
-    }
-    else{
+        else {
 
-        try{
-            data.id = Number(data.id);
-        }catch(e){
-            console.log(e);
+            try {
+                data.id = Number(data.id);
+            } catch (e) {
+                console.log(e);
+            }
+
+
+            try {
+                const response = await dispatch(updateTodo(data));
+                if (response.payload.data !== undefined) {
+                    dispatch(updateFiltered(response.payload.data));
+                }
+
+            }
+            catch (e) {
+                console.log(e) 
+            }
         }
 
-        console.log("data var update çalıştı.")
 
-        try{
-            const response = await dispatch(updateTodo(data));
-            //while(!selector.filteredData);
-            dispatch(updateFiltered(response.payload));
-            console.log(selector.filteredTodos); 
-            console.log(response);
-        }
-        catch(e){
-            console.log(e)
-        }
     }
 
-    console.log("onsubmit çalıştı")
+    return (
+        <div>
+            <div>TodoForm</div>
 
-  }
-  
-  return (
-    <div>
-        <div>TodoForm</div>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <div>
+                    <input {...register("title")} type="text" placeholder='Title' /> <br></br>
+                    {errors.title && errors.title.message}
+                </div>
+                <div>
+                    <input {...register("description")} type="text" placeholder='Description' /> <br />
+                    {errors.description && errors.description.message}
 
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <div>
-                <input {...register("title")} type="text" placeholder='Title'/> <br></br> 
-                {errors.title && errors.title.message}
-            </div>
-            <div>
-                <input {...register("description")} type="text" placeholder='Description'/> <br/>
-                {errors.description && errors.description.message}
+                </div>
+                <div>
+                    <select {...register("status")}>
+                        <option value="status">Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select> <br />
+                    {errors.status && errors.status.message}
 
-            </div>
-            <div>
-                <select {...register("status")}>
-                    <option value="status">Status</option>
-                    <option value="pending">Pending</option>
-                    <option value="in_progress">In Progress</option>    
-                    <option value="completed">Completed</option>
-                    <option value="cancelled">Cancelled</option>
-                </select> <br/>
-                {errors.status && errors.status.message}
+                </div>
+                <div>
+                    <select {...register("priority")}>
+                        <option value="priority">Priority</option>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select> <br />
+                    {errors.priority && errors.priority.message}
 
-            </div>
-            <div>
-                <select {...register("priority")}>
-                    <option value="priority">Priority</option>
-                    <option value="low">Low</option>
-                    <option value="medium">Medium</option>
-                    <option value="high">High</option>
-                </select> <br/>
-                {errors.priority && errors.priority.message}
+                </div>
+                <div>
+                    <input {...register("due_date")} type="date" placeholder='Due Date' /> <br />
+                    {errors.due_date && errors.due_date.message}
 
-            </div>
-            <div>
-                <input {...register("dueDate")} type="date" placeholder='Due Date'/> <br/> 
-                {errors.dueDate && errors.dueDate.message}
+                </div>
 
-            </div>
-
-            <div>
-                <input {...register("id")} onChange={(e) => {
-                    handelChangeUpdate(e.target.value);
-                }} type="text" placeholder='Id to update, not required.'/> <br/>
-            </div>
+                <div>
+                    <input {...register("id")} onChange={(e) => {
+                        handelChangeUpdate(e.target.value);
+                    }} type="text" placeholder='Id to update, not required.' /> <br />
+                </div>
 
 
-            <button disabled={isSubmitting} type='submit'>Submit</button>
+                <button disabled={isSubmitting} type='submit'>Submit</button>
 
-        </form>
+            </form>
 
-        
 
-    </div>
-  )
+
+        </div>
+    )
 }
 
 export default TodoForm

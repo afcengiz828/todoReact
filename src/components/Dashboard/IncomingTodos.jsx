@@ -5,7 +5,7 @@ import { delTodo, updateTodoStatus } from '../../redux/features/todo/TodoSlice';
 
 const IncomingTodos = () => {
 
-    const selector = useSelector(state => state.todo);
+    const selector = useSelector(state => state.filter);
     const [data, setData] = useState([]);
     const dispatch = useDispatch();
 
@@ -13,7 +13,7 @@ const IncomingTodos = () => {
         
         getTodosByDate();
 
-    }, [selector.data]);
+    }, [selector.filteredTodos]);
 
     const handleDelete = async (e, id) => {
         await dispatch(delTodo(id));
@@ -47,7 +47,12 @@ const IncomingTodos = () => {
 
         date.setDate(today.getDate() + 30);
         
-        const todos = selector.data.filter(todo => todo.due_date < date);
+        
+        const todos = selector.filteredTodos.filter(todo => {
+            let due_date = new Date(todo.due_date);
+            return due_date < date && due_date > today;
+        });
+        
         setData(todos);
         return todos;
     }

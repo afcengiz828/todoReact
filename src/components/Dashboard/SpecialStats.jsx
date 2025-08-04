@@ -3,12 +3,12 @@ import { useSelector } from 'react-redux'
 
 const SpecialStats = () => {
 
-    const selector = useSelector(state => state.todo);
+    const selector = useSelector(state => state.filter);
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        setData(selector.data);
-    }, [selector.data]);
+        setData(selector.filteredTodos);
+    }, [selector.filteredTodos]);
     
     const statuses = ["pending", "in_progress", "completed", "cancelled"];
 

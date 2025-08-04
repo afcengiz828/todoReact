@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { delTodo, getAllTodo, updateTodoStatus } from '../redux/features/todo/TodoSlice';
 import { Link, Links } from 'react-router-dom';
-import TodoDetail from '../pages/TodoDetail';
 import ReactPaginate from 'react-paginate';
+import { setFilteredStatus } from '../redux/features/todo/FilteredSlice';
 
 const TodoItem = () => {
     const selector = useSelector((state) => state.filter);
@@ -14,14 +14,19 @@ const TodoItem = () => {
     var limit = 10
 
     useEffect(() => {
-        var count = Math.ceil(todoSelector.dataCount / 10);
-        setPageCount(count);
-    },[selector.filteredTodos])
+        if(selector.filteredTodos.length > 0){
+
+            var count = Math.ceil(todoSelector.dataCount / 10);
+            setPageCount(count);
+            //console.log(selector.filteredTodos);
+        }
+    },[selector.filteredTodos]);
 
     async function fetchData(page, limit) {     
         if (!limit) {
             limit = 10
         }
+        console.log(page)
         await dispatch(getAllTodo(`?page=${page}&limit=${limit}`)).then((response) => {
             if (response.type == "gettodo/fulfilled") {
                 console.log("Veri başarıyla yüklendi.", response);
@@ -60,6 +65,9 @@ const TodoItem = () => {
     const handlePageClick = (data) => {
         console.log(data.selected + 1);
         fetchData(data.selected + 1, 10);
+        if(selector.filterStatus){
+            dispatch(setFilteredStatus(false));
+        }
     }
 
     return (
@@ -79,7 +87,7 @@ const TodoItem = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {/*console.log(selector.filteredTodos)*/}
+                    {/* {selector.filteredTodos.length>0  ? console.log(selector.filteredTodos) : "  "} */}
 
 
                     {selector.filteredTodos?.map((c) => {

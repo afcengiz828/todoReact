@@ -14,8 +14,6 @@ const initialState = {
 
 export const getAllTodo = createAsyncThunk( "gettodo" ,async (url) => {
         const response = await axios.get(`http://localhost:8000/api/todos/${url}`);  
-    // console.log("Api çağrısı başarılı");
-    // console.log(response.data.data);
     return response.data;
 })
 
@@ -60,7 +58,6 @@ export const TodoSlice = createSlice({
     extraReducers : (builder) => {
         builder
             .addCase(getAllTodo.fulfilled, (state, action) => {
-                //console.log(action.payload);
                 state.status = action.payload.status;
                 state.messages = action.payload.messages;
                
@@ -68,10 +65,8 @@ export const TodoSlice = createSlice({
                 state.dataCount = action.payload.count;
 
                 state.loading = false;
-                //console.log("Api sonrası işlemler başarılı.");
             })
             .addCase(getAllTodo.pending, (state) => {
-                //onsole.log("pending")
                 state.loading = true;
                 
             })
@@ -80,8 +75,7 @@ export const TodoSlice = createSlice({
                 state.loading = false;
             })
             .addCase(addTodo.fulfilled, (state, action) => {
-                //console.log(action.payload);
-                
+                console.log(action.payload)
                 state.data.push(action.payload.data)
                 state.loading = false;
             })
@@ -91,8 +85,8 @@ export const TodoSlice = createSlice({
             })
             .addCase(addTodo.rejected, (state, action) => {
                 state.error = action.payload;
-                console.log(action.payload.status);
-                state.status = action.payload.status;
+                console.log(action.payload);
+                state.status = action.payload;
                 state.loading = false;
             })
             .addCase(updateTodoStatus.fulfilled, (state, action) => {
@@ -105,6 +99,21 @@ export const TodoSlice = createSlice({
                 
             })
             .addCase(updateTodoStatus.rejected, (state, action) => {
+                state.error = action.payload;
+                console.log(action.payload.status);
+                state.status = action.payload.status;
+                state.loading = false;
+            })
+            .addCase(updateTodo.fulfilled, (state, action) => {
+                console.log(action.payload.data.data);
+                
+                state.loading = false;
+            })
+            .addCase(updateTodo.pending, (state) => {
+                state.loading = true;
+                
+            })
+            .addCase(updateTodo.rejected, (state, action) => {
                 state.error = action.payload;
                 console.log(action.payload.status);
                 state.status = action.payload.status;
