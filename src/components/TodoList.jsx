@@ -8,27 +8,46 @@ import { setFilteredStatus } from '../redux/features/todo/FilteredSlice';
 const TodoList = () => {
 
 
+    const dispatch = useDispatch();
     const selector = useSelector((state) => state.filter);
     const todoSelector = useSelector((state) => state.todo);
-    const dispatch = useDispatch();
-    const [pageCount, setPageCount] = useState();
+    const allSelector = useSelector((state) => state.all);
+
+    const [pageCount, setPageCount] = useState(1);
+    const [list, setList] = useState();
 
     var limit = 10
+
+    // useEffect(async () => {
+        
+    //   await fetchData(pageCount, 10);
+
+    // },[]);
 
     useEffect(() => {
         if (selector.filteredTodos.length > 0) {
 
-            var count = Math.ceil(todoSelector.dataCount / 10);
+            var count = Math.ceil(allSelector.dataCount / 10);
+            
+            if(selector.filterStatus){
+                //console.log(selector.filteredTodos);  
+                setList(selector.filteredTodos);
+
+            }else{
+                console.log(selector.filterStatus);
+
+                setList(todoSelector.data);
+            }
             setPageCount(count);
             //console.log(selector.filteredTodos);
         }
-    }, [selector.filteredTodos]);
+    }, [selector.filteredTodos, selector.filterStatus]);
 
     async function fetchData(page, limit) {
         if (!limit) {
             limit = 10
         }
-        console.log(page)
+        
         await dispatch(getAllTodo(`?page=${page}&limit=${limit}`)).then((response) => {
             if (response.type == "gettodo/fulfilled") {
                 console.log("Veri başarıyla yüklendi.", response);
@@ -92,7 +111,7 @@ const TodoList = () => {
                     {/* {selector.filteredTodos.length>0  ? console.log(selector.filteredTodos) : "  "} */}
 
 
-                    {selector.filteredTodos?.map((c) => {
+                    {list?.map((c) => {
                         return (
 
 

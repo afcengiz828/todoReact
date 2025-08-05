@@ -23,15 +23,19 @@ const TodoFilter = () => {
     const [sortValue, setSortValue] = useState("id");
 
     useEffect(() => {
-        if (currentPriority != "none" || currentStatus != "none" || searchValue != "") {
-            console.log("if bloğuna girdi");
+        if (( currentPriority != "none" || currentStatus != "none" || searchValue != "") ) {
+            // console.log("if bloğuna girdi");
+            // console.log(currentPriority);
+            // console.log(currentStatus);
+            // console.log(searchValue);
             dispatch(setFilteredStatus(true));
         }
         else {
+            //console.log("else bloğu çalıştı setfilterstatus false");
             dispatch(setFilteredStatus(false));
         }
 
-    }, [sortValue, sortValueDirection, currentPriority, currentStatus, searchValue]);
+    }, [ currentPriority, currentStatus, searchValue, sortValue, sortValueDirection]);
 
 
 
@@ -118,6 +122,7 @@ const TodoFilter = () => {
     }
 
     const allFilterOptions = useCallback(() => {
+        //console.log("allfilteroptions çalıştı");
         let data = [];
 
         const todos = selector.allTodos;
@@ -165,15 +170,16 @@ const TodoFilter = () => {
         currentPriority,
         currentStatus,
         searchValue,
-        sortValue,
-        dispatch 
+        sortValueDirection,
+        sortValue
     ]);
 
     useEffect(() => {
-        console.log(filtered.filterStatus)
+        //console.log(filtered.filterStatus)
         if (filtered.filterStatus) {
-            console.log("allfilteroptions çalıştı");
+            //console.log("allfilteroptions çalıştı");
             allFilterOptions();
+            //console.log(filtered.filterStatus);
         }
         else {
             clearFilter();

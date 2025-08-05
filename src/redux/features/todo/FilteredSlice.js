@@ -21,20 +21,19 @@ export const FilteredSlice = createSlice({
         },
         addFiltered: (state, action) => {
             if (action.payload && action.payload !== undefined) {
-                state.filteredTodos = [...current(state.filteredTodos), action.payload];
-
+                state.filteredTodos = [...current(state.filteredTodos), action.payload];   
             }
 
         },
         updateFiltered: (state, action) => {
             if(action.payload.length){
 
-                console.log(action.payload);
+                //console.log(action.payload);
                 state.filteredTodos = action.payload;
             }
         },
         setFilteredStatus : (state, action) => {
-            console.log(action.payload);
+            //console.log(action.payload);
             if(action.payload){
                 state.filterStatus = action.payload;
             }

@@ -77,9 +77,7 @@ const TodoForm = ({}) => {
         if (idTodo) {
             setValue("id", idTodo);
             handelChangeUpdate(idTodo);
-        } else {
-
-        }
+        } 
     }, [idTodo, todos])
 
     

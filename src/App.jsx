@@ -15,8 +15,8 @@ function App() {
   
 
 
-  async function fetchData() {
-      await dispatch(getAllTodo("")).then((response) => {
+  async function fetchData(url) {
+      await dispatch(getAllTodo(url ? url : "")).then((response) => {
           if(response.type == "gettodo/fulfilled"){
               console.log("Veri başarıyla yüklendi.", response);
           }    
@@ -26,9 +26,11 @@ function App() {
       })
     }
 
-    useEffect(() => {    
-      fetchData();
-    },[])
+    useEffect( async () => {    
+      await fetchData();
+      
+      await fetchData("?page=1&limit=10");
+    },[]);
 
     useEffect(() => {
       if(selectorTodo.data){
@@ -39,10 +41,6 @@ function App() {
       }
 
     },[selectorTodo.data]);
-    
-    // useEffect(() => {
-    //   console.log(selector.filteredTodos)
-    // },[selector.filteredTodos])
 
   return (
     <>
