@@ -9,7 +9,7 @@ import { addTodo, getAllTodo, updateTodo } from '../redux/features/todo/TodoSlic
 import { addFiltered, updateFiltered } from '../redux/features/todo/FilteredSlice';
 import { format } from 'date-fns';
 
-const TodoForm = ({}) => {
+const TodoForm = ({ }) => {
 
     const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
 
@@ -57,7 +57,7 @@ const TodoForm = ({}) => {
     const [todos, setTodos] = useState([]);
 
     useEffect(() => {
-        if (selector.filteredTodos.length > 0) { 
+        if (selector.filteredTodos.length > 0) {
             //console.log("Filtered todos");
             //console.log(selector.filteredTodos);
             setTodos(selector.filteredTodos);
@@ -76,13 +76,13 @@ const TodoForm = ({}) => {
         if (idTodo) {
             setValue("id", idTodo);
             handelChangeUpdate(idTodo);
-        } 
+        }
     }, [idTodo, todos])
 
-    
+
 
     const handelChangeUpdate = (id) => {
-        var formvals = null; 
+        var formvals = null;
         setValue("title", "");
         setValue("description", "");
         setValue("status", "status");
@@ -107,10 +107,10 @@ const TodoForm = ({}) => {
         console.log(data);
 
         if (data) {
-            
-            console.log( "String: ", typeof(data.due_date));
-            data.due_date = data.due_date ? new Date(data.due_date)  : data.due_date;
-            data.due_date = data.due_date ? format(data.due_date, "yyyy-MM-dd")  : data.due_date;
+
+            console.log("String: ", typeof (data.due_date));
+            data.due_date = data.due_date ? new Date(data.due_date) : data.due_date;
+            data.due_date = data.due_date ? format(data.due_date, "yyyy-MM-dd") : data.due_date;
             console.log("String: ", data.due_date);
         }
 
@@ -142,7 +142,7 @@ const TodoForm = ({}) => {
 
             }
             catch (e) {
-                console.log(e) 
+                console.log(e)
             }
         }
 
@@ -150,20 +150,22 @@ const TodoForm = ({}) => {
     }
 
     return (
-        <div class="max-w-lg" >
-            <div>TodoForm</div>
-
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <div>
-                    <input {...register("title")} type="text" placeholder='Title' /> <br></br>
-                    {errors.title && errors.title.message}
+        <div class="w-full flex justify-center" >
+            <form onSubmit={handleSubmit(onSubmit)} className='mt-2 border-gray-100 p-4 rounded-2xl bg-gray-100'>
+                <div className='m-2'>
+                    <input {...register("title")} type="text" placeholder='Title' className='bg-transparent border-b border-red focus:outline-none' /> <br></br>
+                    <div className='text-red-600 font-bold'>
+                        {errors.title && errors.title.message}
+                    </div>
                 </div>
-                <div>
-                    <input {...register("description")} type="text" placeholder='Description' /> <br />
-                    {errors.description && errors.description.message}
+                <div className='m-2'>
+                    <input {...register("description")} type="text" placeholder='Description' className='bg-transparent border-b border-red focus:outline-none' /> <br />
+                    <div className='text-red-600 font-bold'>
+                        {errors.description && errors.description.message}
+                    </div>
 
                 </div>
-                <div>
+                <div className='flex justify-around'>
                     <select {...register("status")}>
                         <option value="status">Status</option>
                         <option value="pending">Pending</option>
@@ -171,33 +173,38 @@ const TodoForm = ({}) => {
                         <option value="completed">Completed</option>
                         <option value="cancelled">Cancelled</option>
                     </select> <br />
-                    {errors.status && errors.status.message}
+                    <div className='text-red-600 font-bold'>
+                        {errors.status && errors.status.message}
+                    </div>
 
-                </div>
-                <div>
                     <select {...register("priority")}>
                         <option value="priority">Priority</option>
                         <option value="low">Low</option>
                         <option value="medium">Medium</option>
                         <option value="high">High</option>
                     </select> <br />
-                    {errors.priority && errors.priority.message}
+                    <div className='text-red-600 font-bold'>
+                        {errors.priority && errors.priority.message}
+                    </div>
 
                 </div>
-                <div>
+                <div className='m-2'>
+
                     <input {...register("due_date")} type="date" placeholder='Due Date' /> <br />
-                    {errors.due_date && errors.due_date.message}
+                    <div className='text-red-600 font-bold'>
+                        {errors.due_date && errors.due_date.message}
+                    </div>
 
                 </div>
 
-                <div>
+                <div className='m-2'>
                     <input {...register("id")} onChange={(e) => {
                         handelChangeUpdate(e.target.value);
-                    }} type="text" placeholder='Id to update, not required.' /> <br />
+                    }} type="text" placeholder='Id to update, not required.' className='bg-transparent border-b border-red focus:outline-none w-full' /> <br />
                 </div>
 
 
-                <button disabled={isSubmitting} type='submit'>Submit</button>
+                <button disabled={isSubmitting} type='submit' className='w-full text-center bg-indigo-600 rounded-2xl cursor-pointer'>Submit</button>
 
             </form>
 

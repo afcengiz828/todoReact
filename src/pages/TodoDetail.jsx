@@ -2,9 +2,9 @@ import React from 'react'
 import TodoForm from '../components/TodoForm'
 import Header from '../components/Header'
 
-const TodoDetail = ({ idTodo }) => {
+const TodoDetail = () => {
   return (
-    <div class="flex flex-col justify-start ">
+    <div class="bg-gray-50 h-screen flex flex-col justify-start ">
 
       <Header />
 

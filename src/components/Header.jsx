@@ -11,7 +11,7 @@ const Header = () => {
             {/* HEADER CONTAINER */}
             <div className="container mx-auto flex items-center justify-between px-2 space-x-8">
                 {/* LOGO */}
-                <Link to={'./dashboard'} >
+                <Link to={'../dashboard'} >
                     <a href='#' className='font-poppins text-2xl sm:text-4xl font-bold text-transparent bg-gradient-to-r bg-clip-text from-amber-400 to-red-500'>TODO</a>
                 </Link>
 
