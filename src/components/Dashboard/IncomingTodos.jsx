@@ -5,15 +5,20 @@ import { delTodo, updateTodoStatus } from '../../redux/features/todo/TodoSlice';
 
 const IncomingTodos = () => {
 
-    const selector = useSelector(state => state.filter);
+    const selector = useSelector(state => state.all);
     const [data, setData] = useState([]);
     const dispatch = useDispatch();
+    const priorityObj = {
+        "low" : "Low",
+        "medium" : "Medium",
+        "high" : "High"
+    }
 
     useEffect(() => {
         
         getTodosByDate();
 
-    }, [selector.filteredTodos]);
+    }, [selector.allTodos]);
 
     const handleDelete = async (e, id) => {
         await dispatch(delTodo(id));
@@ -48,7 +53,7 @@ const IncomingTodos = () => {
         date.setDate(today.getDate() + 30);
         
         
-        const todos = selector.filteredTodos.filter(todo => {
+        const todos = selector.allTodos.filter(todo => {
             let due_date = new Date(todo.due_date);
             return due_date < date && due_date > today;
         });
@@ -60,8 +65,8 @@ const IncomingTodos = () => {
 
     return (
         <>
-            <div>
-            <table>
+            <div class='min-w-full overflow-x-auto bg-white rounded-lg shadow-md '>
+            <table class="table-auto min-w-full divide-y divide-gray-200">
                 <thead>
                     <tr>
                         <th>Id</th>
@@ -70,24 +75,18 @@ const IncomingTodos = () => {
                         <th>Status</th>
                         <th>Priority</th>
                         <th>Due Date</th>
-                        <th>Created At</th>
-                        <th>Updated At</th>
-                        <th>Icons</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
-                <tbody>
-                    {/*console.log(selector.filteredTodos)*/}
+                <tbody class="bg-white divide-y divide-gray-200" >
 
 
                     {data?.map((c) => {
                         return (
-
-
-                            <tr key={c.id}>
-                                <td>{c.id}</td>
+                            <tr key={c.id} >
+                                <td class="px-4 py-3">{c.id}</td>
                                 <td>
                                     <Link to={`/tododetail/${c.id}`} >
-
                                         {c.title}
                                     </Link>
 
@@ -107,18 +106,17 @@ const IncomingTodos = () => {
                                     </select> <br />
                                 </td>
 
-                                <td>{c.priority}</td>
+                                <td>{priorityObj[c.priority]}</td>
 
                                 <td>{c.due_date ? c.due_date.split("T")[0] : ""}</td>
 
-                                <td>{c.created_at ? c.created_at.split("T")[0] : ""}</td>
-
-                                <td>{c.updated_at ? c.updated_at.split("T")[0] : ""}</td>
 
                                 <td>
-                                    <button onClick={(e) => {
+                                    <button class='' onClick={(e) => {
                                         handleDelete(e, c.id);
-                                    }}>Delete</button>
+                                    }}>
+                                        <i className='fas fa-trash'></i>
+                                    </button>
                                 </td>
                             </tr>
 

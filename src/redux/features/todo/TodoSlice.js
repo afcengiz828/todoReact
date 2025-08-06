@@ -62,7 +62,7 @@ export const TodoSlice = createSlice({
                 state.messages = action.payload.messages;
                
                 state.data = action.payload.data;
-                console.log(state.data)
+                console.log(state.data);
                 state.dataCount = action.payload.count;
 
                 state.loading = false;

@@ -51,7 +51,6 @@ const TodoForm = ({}) => {
     });
 
     const dispatch = useDispatch();
-    const location = useLocation();
     var selector = useSelector(state => state.filter);
 
     const { idTodo } = useParams();
@@ -151,7 +150,7 @@ const TodoForm = ({}) => {
     }
 
     return (
-        <div>
+        <div class="max-w-lg" >
             <div>TodoForm</div>
 
             <form onSubmit={handleSubmit(onSubmit)}>

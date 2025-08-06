@@ -15,7 +15,7 @@ export const AllTodoSlice = createSlice({
                 //console.log(action.payload);
                 state.allTodos = action.payload;
                 state.dataCount = action.payload.length;
-                //console.log(state.allTodos)
+                console.log(state.allTodos)
             }
         }
     }

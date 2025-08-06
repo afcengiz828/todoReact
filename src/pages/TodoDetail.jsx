@@ -1,14 +1,17 @@
 import React from 'react'
 import TodoForm from '../components/TodoForm'
+import Header from '../components/Header'
 
-const TodoDetail = ({idTodo}) => {
+const TodoDetail = ({ idTodo }) => {
   return (
-    <div>
-        <center>
+    <div class="flex flex-col justify-start ">
 
+      <Header />
+
+      <section>
         <TodoForm/>
-        </center>
-        
+      </section>
+
     </div>
   )
 }
