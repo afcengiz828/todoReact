@@ -2,6 +2,7 @@ import React from 'react'
 import SpecialStats from '../components/Dashboard/SpecialStats'
 import IncomingTodos from '../components/Dashboard/IncomingTodos'
 import Header from '../components/Header'
+import ModalExample from '../components/ModalExample'
 
 const Dashboard = () => {
 
@@ -27,12 +28,11 @@ const Dashboard = () => {
       </section>
 
       <section class=" py-6">
-        <div class="mx-auto overflow-x-auto rounded-lg shadow-md max-w-xl">
+        <div class="mx-auto overflow-x-auto rounded-lg shadow-md w-8/9">
           <IncomingTodos />
         </div>
       </section>
     </div>
-
 
     </>
     

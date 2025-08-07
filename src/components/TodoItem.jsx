@@ -4,6 +4,7 @@ import { delTodo, getAllTodo, updateTodoStatus } from '../redux/features/todo/To
 import { Link, Links, useParams } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
 import { setFilteredStatus } from '../redux/features/todo/FilteredSlice';
+import Header from './Header';
 
 const TodoItem = () => {
 
@@ -25,9 +26,19 @@ const TodoItem = () => {
 
   }, [selector.allTodos])
 
+  const priorityObj = {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High"
+    }
+
   return (
-    <div>
-      <table>
+    <div className='h-screen bg-gray-50'>
+      <Header />
+      <div  className='flex justify-center'>
+
+
+      <table className='w-8/9 bg-gray-300 border-0 rounded-2xl p-2'>
         <thead>
           <tr>
             <th>Id</th>
@@ -36,16 +47,23 @@ const TodoItem = () => {
             <th>Status</th>
             <th>Priority</th>
             <th>Due Date</th>
-            <th>Created At</th>
-            <th>Updated At</th>
+            <th>Delete</th>
+            <th>Edit</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>{c.id}</td>
-            <td>{c.title}</td>
-            <td>{c.description}</td>
-            <td>
+          <tr key={c.id}>
+            <td className='px-3 py-2'>
+              <Link to={`/todoitem/${c.id}`} >
+                {c.id}
+              </Link>
+            </td>
+            <td className='px-3 py-2'>
+              {c.title}
+
+            </td>
+            <td className='px-3 py-2'>{c.description}</td>
+            <td className='px-3 py-2'>
               <select value={c.status} onChange={(e) => {
                 handleStatus(e, c.id)
               }}>
@@ -56,20 +74,31 @@ const TodoItem = () => {
                 <option value="cancelled">Cancelled</option>
               </select> <br />
             </td>
-            <td>{c.priority}</td>
-            <td>{c.due_date ? c.due_date.split("T")[0] : ""}</td>
-            <td>{c.created_at ? c.created_at.split("T")[0] : ""}</td>
-            <td>{c.updated_at ? c.updated_at.split("T")[0] : ""}</td>
-            <td>
-              <button onClick={(e) => {
+
+            <td className='px-3 py-2 text-center'>{priorityObj[c.priority]}</td>
+
+            <td className='w-auto px-3 py-2 text-nowrap'>{c.due_date ? c.due_date.split("T")[0] : ""}</td>
+
+
+            <td className='px-3 py-2'>
+              <button className='cursor-pointer' onClick={(e) => {
                 handleDelete(e, c.id);
               }}>Delete</button>
+
+            </td>
+            <td className='px-3 py-2'>
+              <Link to={`/tododetail/${c.id}`} >
+                <div>Edit</div>
+              </Link>
             </td>
           </tr>
         </tbody>
       </table>
+      </div>
+
     </div>
   )
 }
 
 export default TodoItem
+

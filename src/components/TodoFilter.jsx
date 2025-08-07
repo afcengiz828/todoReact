@@ -23,15 +23,10 @@ const TodoFilter = () => {
     const [sortValue, setSortValue] = useState("id");
 
     useEffect(() => {
-        if (( currentPriority != "none" || currentStatus != "none" || searchValue != "") ) {
-            // console.log("if bloğuna girdi");
-            // console.log(currentPriority);
-            // console.log(currentStatus);
-            // console.log(searchValue);
+        if (( currentPriority != "none" || currentStatus != "none" || searchValue.trim() )) {
             dispatch(setFilteredStatus(true));
         }
         else {
-            //console.log("else bloğu çalıştı setfilterstatus false");
             dispatch(setFilteredStatus(false));
         }
 
@@ -89,7 +84,6 @@ const TodoFilter = () => {
                     todo.description?.toLowerCase().includes(val.toLowerCase())
                 );
             });
-
             return filtered;
         }
 
@@ -122,7 +116,6 @@ const TodoFilter = () => {
     }
 
     const allFilterOptions = useCallback(() => {
-        //console.log("allfilteroptions çalıştı");
         let data = [];
 
         const todos = selector.allTodos;
@@ -137,16 +130,12 @@ const TodoFilter = () => {
         data = handleSearch(searchValue, data);
 
         if (!data) {
-            console.log(selectorTodo.data);
             data = [...selectorTodo.data];
         }
+        
 
         if (currentPriority == "none" && currentStatus == "none") {
-            if (originalTodos.length == 0) {
-                data = [...todos];
-            } else {
-                data = [...originalTodos];
-            }
+            
         }
         else if (currentPriority == "none" && currentStatus != "none") {
             data = handleFilterStatus(currentStatus, data);
@@ -159,7 +148,9 @@ const TodoFilter = () => {
             data = handleFilterStatus(currentStatus, data);
         }
 
+
         data = handleSort(sortValue, data);
+
 
         if (data) {
             dispatch(updateFiltered(data));
@@ -175,11 +166,8 @@ const TodoFilter = () => {
     ]);
 
     useEffect(() => {
-        //console.log(filtered.filterStatus)
         if (filtered.filterStatus) {
-            //console.log("allfilteroptions çalıştı");
             allFilterOptions();
-            //console.log(filtered.filterStatus);
         }
         else {
             clearFilter();
@@ -187,14 +175,14 @@ const TodoFilter = () => {
     }, [filtered.filterStatus, allFilterOptions, clearFilter]);
 
     return (
-        <center>
 
-            <div>
+            <div className='flex justify-around'>
                 <div id='search'>
-                    <input type="text" placeholder="Search.." value={searchValue} onChange={(e) => {
+                    <input type="text" placeholder="Search.." className='bg-transparent border-b border-red focus:outline-none' value={searchValue} onChange={(e) => {
                         setSearchValue(e.target.value);
                     }}></input>
                 </div>
+
                 <div id='siralama'>
                     <select value={sortValue} onChange={(e) => {
 
@@ -212,6 +200,7 @@ const TodoFilter = () => {
                         <option value="desc">Azalan</option>
                     </select>
                 </div>
+
                 <div id='filtre'>
                     {/* status priority e göre filtreleme */}
                     <select value={currentPriority} onChange={(e) => {
@@ -233,7 +222,6 @@ const TodoFilter = () => {
                     </select>
                 </div>
             </div>
-        </center>
     )
 }
 

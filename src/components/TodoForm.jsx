@@ -58,8 +58,6 @@ const TodoForm = ({ }) => {
 
     useEffect(() => {
         if (selector.filteredTodos.length > 0) {
-            //console.log("Filtered todos");
-            //console.log(selector.filteredTodos);
             setTodos(selector.filteredTodos);
         }
 
@@ -68,7 +66,6 @@ const TodoForm = ({ }) => {
         setValue("status", "status");
         setValue("priority", "priority");
         setValue("due_date", "");
-        // console.log("Form verileri sıfırlandı.");
 
     }, [selector.filteredTodos])
 
@@ -118,8 +115,11 @@ const TodoForm = ({ }) => {
             try {
                 // console.log(data)
                 const response = await dispatch(addTodo(data));
-                console.log(response.payload)
-                dispatch(addFiltered(response.payload));
+                console.log(response.payload);
+                if(response.payload != undefined){
+                    dispatch(addFiltered(response.payload));
+                }
+
             }
             catch (e) {
                 console.log(e)
@@ -151,22 +151,22 @@ const TodoForm = ({ }) => {
 
     return (
         <div class="w-full flex justify-center" >
-            <form onSubmit={handleSubmit(onSubmit)} className='mt-2 border-gray-100 p-4 rounded-2xl bg-gray-100'>
+            <form onSubmit={handleSubmit(onSubmit)} className='mt-2 p-4 rounded-2xl bg-gray-100 w-lg'>
                 <div className='m-2'>
-                    <input {...register("title")} type="text" placeholder='Title' className='bg-transparent border-b border-red focus:outline-none' /> <br></br>
+                    <input {...register("title")} type="text" placeholder='Title' className='w-full bg-transparent border-b border-red focus:outline-none' /> <br></br>
                     <div className='text-red-600 font-bold'>
                         {errors.title && errors.title.message}
                     </div>
                 </div>
                 <div className='m-2'>
-                    <input {...register("description")} type="text" placeholder='Description' className='bg-transparent border-b border-red focus:outline-none' /> <br />
+                    <textarea {...register("description")} type="text" placeholder='Description' className='w-full h-32 bg-transparent border-b border-red focus:outline-none' /> <br />
                     <div className='text-red-600 font-bold'>
                         {errors.description && errors.description.message}
                     </div>
 
                 </div>
                 <div className='flex justify-around'>
-                    <select {...register("status")}>
+                    <select {...register("status")} className=''>
                         <option value="status">Status</option>
                         <option value="pending">Pending</option>
                         <option value="in_progress">In Progress</option>
@@ -188,11 +188,11 @@ const TodoForm = ({ }) => {
                     </div>
 
                 </div>
-                <div className='m-2'>
+                <div className='m-2 flex justify-center '>
 
-                    <input {...register("due_date")} type="date" placeholder='Due Date' /> <br />
+                    <input {...register("due_date")} type="date" placeholder='Due Date'className='' /> <br />
                     <div className='text-red-600 font-bold'>
-                        {errors.due_date && errors.due_date.message}
+                        {errors.due_date && errors.due_date.message} 
                     </div>
 
                 </div>

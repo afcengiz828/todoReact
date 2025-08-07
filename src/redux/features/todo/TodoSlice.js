@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios';
 import React from 'react'
+import { delFiltered } from './FilteredSlice';
+import { useDispatch } from 'react-redux';
 
 const initialState = {
     status : "",
@@ -12,6 +14,7 @@ const initialState = {
 
 }
 
+
 export const getAllTodo = createAsyncThunk( "gettodo" ,async (url) => {
         const response = await axios.get(`http://localhost:8000/api/todos/${url}`);  
     return response.data;
@@ -22,8 +25,8 @@ export const addTodo = createAsyncThunk( "addtodo" , async (newTodo) => {
     console.log("addTodo içindeki json verisi");
     console.log(newTodo);   
     const response = await axios.post("http://localhost:8000/api/todos", newTodo); 
-    console.log(response.data.data);
-    return response.data.data;
+    console.log(response.data);
+    return response.data;
 })
 
 export const delTodo = createAsyncThunk( "deltodo" ,async (id) => {
@@ -77,14 +80,37 @@ export const TodoSlice = createSlice({
             })
             .addCase(addTodo.fulfilled, (state, action) => {
                 console.log(action.payload)
-                state.data.push(action.payload.data)
-                state.loading = false;
+                if(action.payload != undefined){
+                    state.data.push(action.payload.data)
+                    state.loading = false;
+                } else {
+                    console.log("Undefined veri yakalandı")
+                }
             })
             .addCase(addTodo.pending, (state) => {
                 state.loading = true;
                 
             })
             .addCase(addTodo.rejected, (state, action) => {
+                state.error = action.payload;
+                console.log(action.payload);
+                state.status = action.payload;
+                state.loading = false;
+            })
+            .addCase(delTodo.fulfilled, (state, action) => {
+                
+                console.log(action.payload);
+                if(action.payload != undefined && action.payload.data.status == "succes"){
+                    state.loading = false;
+                } else {
+                    console.log("Undefined veri yakalandı")
+                }
+            })
+            .addCase(delTodo.pending, (state) => {
+                state.loading = true;
+                
+            })
+            .addCase(delTodo.rejected, (state, action) => {
                 state.error = action.payload;
                 console.log(action.payload);
                 state.status = action.payload;
