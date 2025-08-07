@@ -1,13 +1,21 @@
 import React from 'react'
-import Dashboard from '../pages/Dashboard'
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom'
+import { setDark } from '../redux/features/todo/ThemeSlice';
 
 const Header = () => {
+
+
+    const dispatch = useDispatch();
+
+    const toggleTheme = (e) => {
+        document.documentElement.classList.toggle("dark");
+    }
 
     return (
 
         // HEADER SECTION 
-        <header className='py-6 text-black font-poppins uppercase '>
+        <header className='py-6 text-black dark:text-gray-200 font-poppins uppercase '>
             {/* HEADER CONTAINER */}
             <div className="container mx-auto flex items-center justify-between px-2 space-x-8">
                 {/* LOGO */}
@@ -25,6 +33,16 @@ const Header = () => {
                             <a href="#" className='hover:text-amber-400 transition duration-300 text-xl sm:text-2xl'>Add</a>
                         </Link>
 
+                    </div>
+
+                    <div>
+                        <button className='cursor-pointer' onClick={() => dispatch(setDark())} aria-label="Toggle dark mode">
+                            <img
+                                src="/dark-theme-svgrepo-com.svg"
+                                alt="Koyu Tema Ikonu"
+                                className="w-10 h-10"
+                            />
+                        </button>
                     </div>
                 </nav>
             </div>

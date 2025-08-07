@@ -120,11 +120,11 @@ const TodoList = () => {
 
             return (
 
-                <div className='flex-col justify-around mt-4 bg-gray-50'>
-                    <div className='flex justify-center '>
+                <div className='flex-col justify-around mt-4 '>
+                    <div className='flex justify-center text-gray-900 dark:text-gray-100'>
 
 
-                        <table className='w-8/9 text-center bg-gray-300 border-0 rounded-2xl p-2'>
+                        <table className='w-8/9 h-full text-center bg-gray-300 dark:bg-gray-600 border-0 rounded-2xl p-2'>
                             <thead>
                                 <tr>
                                     <th className='px-3 py-2'>Id</th>

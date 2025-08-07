@@ -5,12 +5,23 @@ import { Link, Links, useParams } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
 import { setFilteredStatus } from '../redux/features/todo/FilteredSlice';
 import Header from './Header';
+import { motion } from "framer-motion";
+
 
 const TodoItem = () => {
 
   const [c, setC] = useState({});
   const selector = useSelector(state => state.all);
   const id = useParams();
+  const selectorDark = useSelector(state => state.dark);
+  
+  useEffect(() => {
+    if (selectorDark.dark) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [selectorDark.dark]);
 
   useEffect(() => {
     if (selector.allTodos.length > 0) {
@@ -26,19 +37,34 @@ const TodoItem = () => {
 
   }, [selector.allTodos])
 
+    const pageTransition = {
+    initial: { opacity: 0, x: -100 },
+    animate: { opacity: 1, x: 0 },
+    exit: { opacity: 0, x: 100 },
+  };
+
   const priorityObj = {
         "low": "Low",
         "medium": "Medium",
         "high": "High"
     }
 
+ 
+    
+
   return (
-    <div className='h-screen bg-gray-50'>
+    <div className='h-screen bg-gray-50 dark:bg-gray-900'>
+      <motion.div variants={pageTransition}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          transition={{ duration: 0.5 }} >
+
       <Header />
       <div  className='flex justify-center'>
 
 
-      <table className='w-8/9 bg-gray-300 border-0 rounded-2xl p-2'>
+      <table className='w-8/9 bg-gray-200 dark:bg-gray-500 border-0 rounded-2xl p-2 text-gray-900 dark:text-gray-200'>
         <thead>
           <tr>
             <th>Id</th>
@@ -96,6 +122,7 @@ const TodoItem = () => {
       </table>
       </div>
 
+              </motion.div>
     </div>
   )
 }

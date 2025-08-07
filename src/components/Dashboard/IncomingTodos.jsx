@@ -122,7 +122,7 @@ const IncomingTodos = () => {
     if (todo.loading) {
         return (
             <>
-                <div className='text-center border-0 rounded-2xl font-bold w-full bg-blue-300 text-2xl p-4'>
+                <div className='text-center text-gray-900 dark:text-gray-900 border-0 rounded-2xl font-bold w-full bg-blue-300 dark:bg-blue-300 text-2xl p-4'>
                     Veri yükleniyor
                 </div>
             </>
@@ -132,7 +132,7 @@ const IncomingTodos = () => {
         if (todo.error) {
             return (
                 <>
-                    <div className='text-center border-0 rounded-2xl bg-red-500  text-amber-100 p-4'>
+                    <div className='text-center border-0 rounded-2xl bg-red-500 dark:bg-red-500  text-amber-100 dark:text-blue-500  p-4'>
                         <h1 className='font-bold text-2xl'>
                             Error var
                         </h1>
@@ -149,8 +149,8 @@ const IncomingTodos = () => {
 
             return (
                 <>
-                    <div class='min-w-full overflow-x-auto rounded-lg shadow-md '>
-                        <table class="table-auto min-w-full text-center divide-y divide-gray-200 bg-gray-100 ">
+                    <div class='min-w-full overflow-x-auto rounded-lg shadow-md bg-gray-200 dark:bg-gray-600 text-gray-900 dark:text-gray-200'>
+                        <table class="table-auto min-w-full text-center divide-y divide-gray-200  ">
                             <thead>
                                 <tr>
                                     <th>Id</th>
@@ -164,12 +164,12 @@ const IncomingTodos = () => {
 
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-200 text-gray-900" >
+                            <tbody class="divide-y divide-gray-200 " >
 
 
                                 {data?.map((c) => {
                                     return (
-                                        <tr key={c.id} className='hover:bg-gray-200'>
+                                        <tr key={c.id} className='hover:bg-gray-300 dark:hover:bg-gray-500'>
                                             <td class="px-4 py-3">{c.id}</td>
                                             <td>
                                                 <Link to={`/tododetail/${c.id}`} >
@@ -204,7 +204,13 @@ const IncomingTodos = () => {
                                                 </div>
                                             </td>
 
-                                            <td>{c.due_date ? c.due_date.split("T")[0] : ""}</td>
+                                            <td className="whitespace-nowrap">
+                                            <div className='flex flex-nowrap'>
+
+                                                {c.due_date ? c.due_date.split("T")[0] : ""}
+
+                                            </div>
+                                            </td>
 
 
                                             <td className='cursor-pointer'>

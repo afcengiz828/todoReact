@@ -25,15 +25,15 @@ const SpecialStats = () => {
     }
 
     return (
-        <tbody class=" divide-y divide-gray-200 text-center">
+        <tbody class=" divide-y divide-gray-200 text-center text-gray-900 dark:text-gray-100">
             {statuses.map((status) => {
                 return (
 
-                    <tr class="hover:bg-gray-200">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-inter text-gray-900">
+                    <tr class="hover:bg-gray-300 dark:hover:bg-gray-500">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-inter ">
                             {statusObj[status]}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-inter text-gray-900">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-inter ">
                                 {statusCounts(status)}
                             
                         </td>

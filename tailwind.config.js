@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 
 export default {
+  darkMode: 'class',
   content: [
     "./index.html",
     "./src/**/*.{js,jsx,ts,tsx}", // proje yapına göre dizinleri güncelle
@@ -9,9 +10,9 @@ export default {
     extend: {
       fontFamily: {
         inter: ["Inter", "sans-serif"],
-        poppins: ["Poppins", "sans-serif"], 
+        poppins: ["Poppins", "sans-serif"],
       },
-    
+
       screens: {
         "3xl": "120rem",
       },
@@ -21,5 +22,6 @@ export default {
       },
     },
   },
+
   plugins: [],
 };

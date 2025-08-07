@@ -184,16 +184,16 @@ const TodoFilter = () => {
 
         return (
             <div className='flex justify-between p2 '>
-                <div id='search' className='mx-2 my-1'>
+                <div id='search' className='mx-2 my-1 text-gray-900 dark:text-gray-200'>
                     Arama: 
                     <input type="text" placeholder="Search.." className='mx-2 bg-transparent border-b border-red focus:outline-none' value={searchValue} onChange={(e) => {
                         setSearchValue(e.target.value);
                     }}></input>
                 </div>
 
-                <div id='siralama' className='mx-2 my-1'>
+                <div id='siralama' className='mx-2 my-1 text-gray-900 dark:text-gray-200'>
                     Sıralama: 
-                    <select  className=' border rounded-2xl text-center no-arrow mx-2 w-24' value={sortValue} onChange={(e) => {
+                    <select  className=' border rounded-2xl text-center no-arrow mx-2 w-24 dark:bg-gray-900' value={sortValue} onChange={(e) => {
 
                         setSortValue(e.target.value);
 
@@ -202,7 +202,7 @@ const TodoFilter = () => {
                         <option value="title">Title'a Göre</option>
                         <option value="date">Due Date'e Göre</option>
                     </select>
-                    <select  className=' border rounded-2xl text-center no-arrow mx-2 w-16' value={sortValueDirection} onChange={(e) => {
+                    <select  className=' border rounded-2xl text-center no-arrow mx-2 w-16 dark:bg-gray-900' value={sortValueDirection} onChange={(e) => {
                         setSortValueDirection(e.target.value);
                     }}>
                         <option value="asc">Artan</option>
@@ -210,10 +210,10 @@ const TodoFilter = () => {
                     </select>
                 </div>
 
-                <div id='filtre' className='mx-2 my-1'>
+                <div id='filtre' className='mx-2 my-1 text-gray-900 dark:text-gray-200'>
                     Filtreleme: 
                     {/* status priority e göre filtreleme */}
-                    <select  className=' border rounded-2xl text-center no-arrow mx-2 w-24' value={currentPriority} onChange={(e) => {
+                    <select  className=' border rounded-2xl text-center no-arrow mx-2 w-24 dark:bg-gray-900' value={currentPriority} onChange={(e) => {
                         setCurrentPriority(e.target.value);
                     }}>
                         <option value="none">Priority</option>
@@ -221,7 +221,7 @@ const TodoFilter = () => {
                         <option value="medium">Medium</option>
                         <option value="high">High</option>
                     </select>
-                    <select className=' border rounded-2xl text-center no-arrow mx-2 w-24' value={currentStatus} onChange={(e) => {
+                    <select className=' border rounded-2xl text-center no-arrow mx-2 w-24 dark:bg-gray-900' value={currentStatus} onChange={(e) => {
                         setCurrentStatus(e.target.value);
                     }}>
                         <option value="none" >Status</option>

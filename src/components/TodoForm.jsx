@@ -159,7 +159,7 @@ const TodoForm = ({ }) => {
         <div class="w-full flex-col" >
             <div className='flex justify-center'>
 
-                <form onSubmit={handleSubmit(onSubmit)} className='mt-2 p-4 rounded-2xl bg-gray-100 w-lg'>
+                <form onSubmit={handleSubmit(onSubmit)} className='mt-2 p-4 rounded-2xl  bg-gray-100 dark:bg-gray-600 w-lg text-gray-900 dark:text-gray-200'>
                     <div className='m-2'>
                         <input {...register("title")} type="text" placeholder='Title' className='w-full bg-transparent border-b border-red focus:outline-none' /> <br></br>
                         <div className='text-red-600 font-bold'>
@@ -212,12 +212,12 @@ const TodoForm = ({ }) => {
                     </div>
 
 
-                    <button disabled={isSubmitting} type='submit' className='w-full text-center bg-indigo-600 text-gray-50 rounded-2xl cursor-pointer'>Submit</button>
+                    <button disabled={isSubmitting} type='submit' className='w-full p-2 text-center bg-indigo-600 text-gray-50 rounded-2xl cursor-pointer'>Submit</button>
 
                 </form>
             </div>
 
-            <div className='flex justify-center'>
+            <div className='flex w-full justify-center'>
 
                 {addStatus &&
                     <div className='bg-gray-200 text-blue-800 text-2xl text-center  border-0 rounded-xl mt-4 p-4'>
@@ -229,8 +229,8 @@ const TodoForm = ({ }) => {
                 }
 
                 {updateStatus &&
-                    <div className='bg-gray-200 text-blue-800 text-2xl text-center  border-0 rounded-xl mt-4 p-4'>
-                        <p>
+                    <div className='bg-gray-200 text-blue-800 text-sm md:text-2xl text-center  border-0 rounded-xl mt-4 p-4'>
+                        <p >
                             Veri Başarıyla Güncellendi
                         </p>
 
