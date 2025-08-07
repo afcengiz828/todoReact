@@ -14,7 +14,7 @@ const TodoList = () => {
     const allSelector = useSelector((state) => state.all);
 
     const [pageCount, setPageCount] = useState(1);
-    const [list, setList] = useState();
+    const [list, setList] = useState([]);
 
     const priorityObj = {
         "low": "Low",
@@ -34,6 +34,7 @@ const TodoList = () => {
                 //console.log(selector.filteredTodos);  
                 setList(selector.filteredTodos);
 
+
             } else {
                 console.log(selector.filterStatus);
 
@@ -41,6 +42,8 @@ const TodoList = () => {
             }
             setPageCount(count);
             //console.log(selector.filteredTodos);
+        } else {
+            setList([]);
         }
     }, [selector.filteredTodos, selector.filterStatus]);
 
@@ -62,7 +65,6 @@ const TodoList = () => {
     const handleDelete = async (e, id) => {
         const response = await dispatch(delTodo(id));
         console.log(response.payload.data);
-        //window.location.reload(); //Alternatif ne kullanabiliriz sayfayı yenilemeden sadece render edecek birşey.
 
     }
 
@@ -93,82 +95,105 @@ const TodoList = () => {
         }
     }
 
-    return (
 
-            <div className='flex-col justify-around mt-4 bg-gray-50'>
-                <div className='flex justify-center '>
-
-                
-                <table className='w-8/9 text-center bg-gray-300 border-0 rounded-2xl p-2'>
-                    <thead>
-                        <tr>
-                            <th className='px-3 py-2'>Id</th>
-                            <th className='px-3 py-2'>Title</th>
-                            <th className='px-3 py-2'>Description</th>
-                            <th className='px-3 py-2'>Status</th>
-                            <th className='px-3 py-2'>Priority</th>
-                            <th className='px-3 py-2'>Due Date</th>
-                            <th className='px-3 py-2'>Delete</th>
-                            <th className='px-3 py-2'>Edit</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                        {list?.map((c) => {
-                            return (
-
-
-                                <tr key={c.id}>
-                                    <td className='px-3 py-2'>
-                                        <Link to={`/todoitem/${c.id}`} >
-                                            {c.id}
-                                        </Link>
-                                    </td>
-                                    <td className='px-3 py-2'>
-                                        {c.title}
-
-                                    </td>
-                                    <td className='px-3 py-2'>{c.description}</td>
-                                    <td className='px-3 py-2'>
-                                        <select value={c.status} onChange={(e) => {
-                                            handleStatus(e, c.id)
-                                        }}>
-                                            <option value="status">Status</option>
-                                            <option value="pending">Pending</option>
-                                            <option value="in_progress">In Progress</option>
-                                            <option value="completed">Completed</option>
-                                            <option value="cancelled">Cancelled</option>
-                                        </select> <br />
-                                    </td>
-
-                                    <td className='px-3 py-2'>{priorityObj[c.priority]}</td>
-
-
-                                    <td className='w-auto px-3 py-2 text-nowrap'>{c.due_date ? c.due_date.split("T")[0] : ""}</td>
-
-
-                                    <td className='px-3 py-2'>
-                                        <button className='cursor-pointer' onClick={(e) => {
-                                            handleDelete(e, c.id);
-                                        }}>Delete</button>
-                                        
-                                    </td>
-                                    <td  className='px-3 py-2'>
-                                        <Link to={`/tododetail/${c.id}`} >
-                                            <div>Edit</div>
-                                        </Link>
-                                    </td>
-                                </tr>
-
-                            )
-                        })}
-                    </tbody>
-                </table>
-
+    if (todoSelector.loading) {
+        return (
+            <>
+                <div className='text-center border-0 rounded-2xl font-bold w-full bg-blue-300 text-2xl p-4 mt-4'>
+                    Veri yükleniyor
                 </div>
-                <div>
+            </>
+        )
+    } else {
 
-                    {/* <ReactPaginate
+
+        if (list.length == 0) {
+            return (
+                <>
+                    <div className='text-center bg-red-500 p-4 border-0 rounded-2xl mt-4'>
+                        Aradığınız todo bulunamadı...
+                    </div>
+                </>
+            )
+        }
+        else {
+
+            return (
+
+                <div className='flex-col justify-around mt-4 bg-gray-50'>
+                    <div className='flex justify-center '>
+
+
+                        <table className='w-8/9 text-center bg-gray-300 border-0 rounded-2xl p-2'>
+                            <thead>
+                                <tr>
+                                    <th className='px-3 py-2'>Id</th>
+                                    <th className='px-3 py-2'>Title</th>
+                                    <th className='px-3 py-2'>Description</th>
+                                    <th className='px-3 py-2'>Status</th>
+                                    <th className='px-3 py-2'>Priority</th>
+                                    <th className='px-3 py-2'>Due Date</th>
+                                    <th className='px-3 py-2'>Delete</th>
+                                    <th className='px-3 py-2'>Edit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                {list?.map((c) => {
+                                    return (
+
+
+                                        <tr key={c.id}>
+                                            <td className='px-3 py-2'>
+                                                <Link to={`/todoitem/${c.id}`} >
+                                                    {c.id}
+                                                </Link>
+                                            </td>
+                                            <td className='px-3 py-2'>
+                                                {c.title}
+
+                                            </td>
+                                            <td className='px-3 py-2'>{c.description}</td>
+                                            <td className='px-3 py-2 '>
+                                                <select value={c.status} onChange={(e) => {
+                                                    handleStatus(e, c.id)
+                                                }}>
+                                                    <option value="status" >Status</option>
+                                                    <option value="pending">Pending</option>
+                                                    <option value="in_progress">In Progress</option>
+                                                    <option value="completed">Completed</option>
+                                                    <option value="cancelled">Cancelled</option>
+                                                </select> <br />
+                                            </td>
+
+                                            <td className='px-3 py-2'>{priorityObj[c.priority]}</td>
+
+
+                                            <td className='w-auto px-3 py-2 text-nowrap'>{c.due_date ? c.due_date.split("T")[0] : ""}</td>
+
+
+                                            <td className='px-3 py-2'>
+                                                <button className='cursor-pointer' onClick={(e) => {
+                                                    handleDelete(e, c.id);
+                                                }}>Delete</button>
+
+                                            </td>
+                                            <td className='px-3 py-2'>
+                                                <Link to={`/tododetail/${c.id}`} >
+                                                    <div>Edit</div>
+                                                </Link>
+                                            </td>
+                                        </tr>
+
+                                    )
+                                })}
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div>
+
+                        {/* <ReactPaginate
                         previousLabel={"<<"}
                         nextLabel={">>"}
                         breakLabel={"..."}
@@ -178,9 +203,13 @@ const TodoList = () => {
                         onPageChange={handlePageClick}
                     /> */}
 
+                    </div>
                 </div>
-            </div>
-    )
+            )
+
+        }
+    }
+
 }
 
 export default TodoList

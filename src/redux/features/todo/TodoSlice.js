@@ -84,7 +84,9 @@ export const TodoSlice = createSlice({
                     state.data.push(action.payload.data)
                     state.loading = false;
                 } else {
-                    console.log("Undefined veri yakalandı")
+                    console.log("Undefined veri yakalandı");
+                    state.loading = false;
+
                 }
             })
             .addCase(addTodo.pending, (state) => {
@@ -93,14 +95,14 @@ export const TodoSlice = createSlice({
             })
             .addCase(addTodo.rejected, (state, action) => {
                 state.error = action.payload;
-                console.log(action.payload);
                 state.status = action.payload;
                 state.loading = false;
             })
             .addCase(delTodo.fulfilled, (state, action) => {
                 
-                console.log(action.payload);
+                //console.log(action.payload);
                 if(action.payload != undefined && action.payload.data.status == "succes"){
+
                     state.loading = false;
                 } else {
                     console.log("Undefined veri yakalandı")
@@ -112,7 +114,6 @@ export const TodoSlice = createSlice({
             })
             .addCase(delTodo.rejected, (state, action) => {
                 state.error = action.payload;
-                console.log(action.payload);
                 state.status = action.payload;
                 state.loading = false;
             })
@@ -127,8 +128,8 @@ export const TodoSlice = createSlice({
             })
             .addCase(updateTodoStatus.rejected, (state, action) => {
                 state.error = action.payload;
-                console.log(action.payload.status);
-                state.status = action.payload.status;
+                state.status = action.payload.data.status;
+                state.messages = action.payload.data.message;
                 state.loading = false;
             })
             .addCase(updateTodo.fulfilled, (state, action) => {
@@ -142,8 +143,8 @@ export const TodoSlice = createSlice({
             })
             .addCase(updateTodo.rejected, (state, action) => {
                 state.error = action.payload;
-                console.log(action.payload.status);
-                state.status = action.payload.status;
+                state.status = action.payload.data.status;
+                state.messages = action.payload.data.message;
                 state.loading = false;
             })
             

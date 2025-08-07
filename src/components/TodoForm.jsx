@@ -55,6 +55,8 @@ const TodoForm = ({ }) => {
 
     const { idTodo } = useParams();
     const [todos, setTodos] = useState([]);
+    const [addStatus, setAddStatus] = useState(false);
+    const [updateStatus, setUpdateStatus] = useState(false);
 
     useEffect(() => {
         if (selector.filteredTodos.length > 0) {
@@ -116,7 +118,8 @@ const TodoForm = ({ }) => {
                 // console.log(data)
                 const response = await dispatch(addTodo(data));
                 console.log(response.payload);
-                if(response.payload != undefined){
+                if (response.payload != undefined && response.payload.status == "success") {
+                    setAddStatus(true);
                     dispatch(addFiltered(response.payload));
                 }
 
@@ -136,8 +139,11 @@ const TodoForm = ({ }) => {
 
             try {
                 const response = await dispatch(updateTodo(data));
-                if (response.payload.data !== undefined) {
-                    dispatch(updateFiltered(response.payload.data));
+                console.log(response.payload.data)
+                if (response.payload.data !== undefined && response.payload.data.status == "succes") {
+                    console.log("updated");
+                    setUpdateStatus(true);
+                    dispatch(updateFiltered(response.payload.data.data));
                 }
 
             }
@@ -150,63 +156,95 @@ const TodoForm = ({ }) => {
     }
 
     return (
-        <div class="w-full flex justify-center" >
-            <form onSubmit={handleSubmit(onSubmit)} className='mt-2 p-4 rounded-2xl bg-gray-100 w-lg'>
-                <div className='m-2'>
-                    <input {...register("title")} type="text" placeholder='Title' className='w-full bg-transparent border-b border-red focus:outline-none' /> <br></br>
-                    <div className='text-red-600 font-bold'>
-                        {errors.title && errors.title.message}
+        <div class="w-full flex-col" >
+            <div className='flex justify-center'>
+
+                <form onSubmit={handleSubmit(onSubmit)} className='mt-2 p-4 rounded-2xl bg-gray-100 w-lg'>
+                    <div className='m-2'>
+                        <input {...register("title")} type="text" placeholder='Title' className='w-full bg-transparent border-b border-red focus:outline-none' /> <br></br>
+                        <div className='text-red-600 font-bold'>
+                            {errors.title && errors.title.message}
+                        </div>
                     </div>
-                </div>
-                <div className='m-2'>
-                    <textarea {...register("description")} type="text" placeholder='Description' className='w-full h-32 bg-transparent border-b border-red focus:outline-none' /> <br />
-                    <div className='text-red-600 font-bold'>
-                        {errors.description && errors.description.message}
+                    <div className='m-2'>
+                        <textarea {...register("description")} type="text" placeholder='Description' className='w-full h-32 bg-transparent border-b border-red focus:outline-none' /> <br />
+                        <div className='text-red-600 font-bold'>
+                            {errors.description && errors.description.message}
+                        </div>
+
+                    </div>
+                    <div className='flex justify-around'>
+                        <select {...register("status")} className=''>
+                            <option value="status">Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="in_progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select> <br />
+                        <div className='text-red-600 font-bold'>
+                            {errors.status && errors.status.message}
+                        </div>
+
+                        <select {...register("priority")}>
+                            <option value="priority">Priority</option>
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select> <br />
+                        <div className='text-red-600 font-bold'>
+                            {errors.priority && errors.priority.message}
+                        </div>
+
+                    </div>
+                    <div className='m-2 flex justify-center '>
+
+                        <input {...register("due_date")} type="date" placeholder='Due Date' className='' /> <br />
+                        <div className='text-red-600 font-bold'>
+                            {errors.due_date && errors.due_date.message}
+                        </div>
+
                     </div>
 
-                </div>
-                <div className='flex justify-around'>
-                    <select {...register("status")} className=''>
-                        <option value="status">Status</option>
-                        <option value="pending">Pending</option>
-                        <option value="in_progress">In Progress</option>
-                        <option value="completed">Completed</option>
-                        <option value="cancelled">Cancelled</option>
-                    </select> <br />
-                    <div className='text-red-600 font-bold'>
-                        {errors.status && errors.status.message}
+                    <div className='m-2'>
+                        <input {...register("id")} onChange={(e) => {
+                            handelChangeUpdate(e.target.value);
+                        }} type="text" placeholder='Id to update, not required.' className='bg-transparent border-b border-red focus:outline-none w-full' /> <br />
                     </div>
 
-                    <select {...register("priority")}>
-                        <option value="priority">Priority</option>
-                        <option value="low">Low</option>
-                        <option value="medium">Medium</option>
-                        <option value="high">High</option>
-                    </select> <br />
-                    <div className='text-red-600 font-bold'>
-                        {errors.priority && errors.priority.message}
+
+                    <button disabled={isSubmitting} type='submit' className='w-full text-center bg-indigo-600 text-gray-50 rounded-2xl cursor-pointer'>Submit</button>
+
+                </form>
+            </div>
+
+            <div className='flex justify-center'>
+
+                {addStatus &&
+                    <div className='bg-gray-200 text-blue-800 text-2xl text-center  border-0 rounded-xl mt-4 p-4'>
+                        <p>
+                            Veri Başarıyla Eklendi
+                        </p>
+
                     </div>
+                }
 
-                </div>
-                <div className='m-2 flex justify-center '>
+                {updateStatus &&
+                    <div className='bg-gray-200 text-blue-800 text-2xl text-center  border-0 rounded-xl mt-4 p-4'>
+                        <p>
+                            Veri Başarıyla Güncellendi
+                        </p>
 
-                    <input {...register("due_date")} type="date" placeholder='Due Date'className='' /> <br />
-                    <div className='text-red-600 font-bold'>
-                        {errors.due_date && errors.due_date.message} 
                     </div>
+                }
 
+                <div className='opacity-0'>
+
+                    {setTimeout(() => {
+                        setAddStatus(false)
+                    }, 3000)}
                 </div>
 
-                <div className='m-2'>
-                    <input {...register("id")} onChange={(e) => {
-                        handelChangeUpdate(e.target.value);
-                    }} type="text" placeholder='Id to update, not required.' className='bg-transparent border-b border-red focus:outline-none w-full' /> <br />
-                </div>
-
-
-                <button disabled={isSubmitting} type='submit' className='w-full text-center bg-indigo-600 rounded-2xl cursor-pointer'>Submit</button>
-
-            </form>
+            </div>
 
 
 
@@ -215,3 +253,5 @@ const TodoForm = ({ }) => {
 }
 
 export default TodoForm
+
+

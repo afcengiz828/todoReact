@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import SpecialStats from '../components/Dashboard/SpecialStats'
 import IncomingTodos from '../components/Dashboard/IncomingTodos'
 import Header from '../components/Header'
@@ -6,14 +6,15 @@ import ModalExample from '../components/ModalExample'
 
 const Dashboard = () => {
 
+
   return (
     <>
 
-    <div className='h-screen bg-gray-50'>
+      <div className='h-screen bg-gray-50'>
 
-      <Header />
+        <Header />
 
-      <section class=" py-6">
+        <section class=" py-6">
           <div class="mx-auto overflow-x-auto rounded-lg shadow-md max-w-xl">
             <table class="min-w-full divide-y divide-gray-200">
               <thead >
@@ -25,17 +26,19 @@ const Dashboard = () => {
               <SpecialStats />
             </table>
           </div>
-      </section>
+        </section>
 
-      <section class=" py-6">
-        <div class="mx-auto overflow-x-auto rounded-lg shadow-md w-8/9">
-          <IncomingTodos />
-        </div>
-      </section>
-    </div>
+        <section class=" py-6">
+          <div class="mx-auto overflow-x-auto rounded-lg shadow-md w-8/9">
+            <IncomingTodos />
+          </div>
+        </section>
+
+        
+      </div>
 
     </>
-    
+
 
 
   )

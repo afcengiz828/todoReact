@@ -1,7 +1,7 @@
 import React, { use, useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import TodoItem from './TodoItem';
-import { setFilteredStatus, updateFiltered } from '../redux/features/todo/FilteredSlice';
+import { setFiltered, setFilteredStatus, updateFiltered } from '../redux/features/todo/FilteredSlice';
 
 const TodoFilter = () => {
 
@@ -21,16 +21,17 @@ const TodoFilter = () => {
     const [searchValue, setSearchValue] = useState("");
     const [sortValueDirection, setSortValueDirection] = useState("asc");
     const [sortValue, setSortValue] = useState("id");
+    const [filter, setFilter] = useState(true);
 
     useEffect(() => {
-        if (( currentPriority != "none" || currentStatus != "none" || searchValue.trim() )) {
+        if ((currentPriority != "none" || currentStatus != "none" || searchValue.trim())) {
             dispatch(setFilteredStatus(true));
         }
         else {
             dispatch(setFilteredStatus(false));
         }
 
-    }, [ currentPriority, currentStatus, searchValue, sortValue, sortValueDirection]);
+    }, [currentPriority, currentStatus, searchValue, sortValue, sortValueDirection]);
 
 
 
@@ -40,7 +41,7 @@ const TodoFilter = () => {
         setSearchValue("");
         setSortValueDirection("asc");
         setSortValue("id");
-    },[filtered.filterStatus]);
+    }, [filtered.filterStatus]);
 
     const handleSort = (param, data) => {
 
@@ -84,7 +85,12 @@ const TodoFilter = () => {
                     todo.description?.toLowerCase().includes(val.toLowerCase())
                 );
             });
-            return filtered;
+            if (filtered.length > 0) {
+                return filtered;
+            } else {
+                return []
+            }
+
         }
 
     }
@@ -128,14 +134,15 @@ const TodoFilter = () => {
         }
 
         data = handleSearch(searchValue, data);
+        console.log(data);
 
-        if (!data) {
-            data = [...selectorTodo.data];
+        if (data.length == 0) {
+            dispatch(setFiltered(data))
         }
-        
+
 
         if (currentPriority == "none" && currentStatus == "none") {
-            
+
         }
         else if (currentPriority == "none" && currentStatus != "none") {
             data = handleFilterStatus(currentStatus, data);
@@ -156,8 +163,8 @@ const TodoFilter = () => {
             dispatch(updateFiltered(data));
 
         }
-    },[filtered.filterStatus, 
-        selector.allTodos, 
+    }, [filtered.filterStatus,
+    selector.allTodos,
         currentPriority,
         currentStatus,
         searchValue,
@@ -174,17 +181,19 @@ const TodoFilter = () => {
         }
     }, [filtered.filterStatus, allFilterOptions, clearFilter]);
 
-    return (
 
-            <div className='flex justify-around'>
-                <div id='search'>
-                    <input type="text" placeholder="Search.." className='bg-transparent border-b border-red focus:outline-none' value={searchValue} onChange={(e) => {
+        return (
+            <div className='flex justify-between p2 '>
+                <div id='search' className='mx-2 my-1'>
+                    Arama: 
+                    <input type="text" placeholder="Search.." className='mx-2 bg-transparent border-b border-red focus:outline-none' value={searchValue} onChange={(e) => {
                         setSearchValue(e.target.value);
                     }}></input>
                 </div>
 
-                <div id='siralama'>
-                    <select value={sortValue} onChange={(e) => {
+                <div id='siralama' className='mx-2 my-1'>
+                    Sıralama: 
+                    <select  className=' border rounded-2xl text-center no-arrow mx-2 w-24' value={sortValue} onChange={(e) => {
 
                         setSortValue(e.target.value);
 
@@ -193,7 +202,7 @@ const TodoFilter = () => {
                         <option value="title">Title'a Göre</option>
                         <option value="date">Due Date'e Göre</option>
                     </select>
-                    <select value={sortValueDirection} onChange={(e) => {
+                    <select  className=' border rounded-2xl text-center no-arrow mx-2 w-16' value={sortValueDirection} onChange={(e) => {
                         setSortValueDirection(e.target.value);
                     }}>
                         <option value="asc">Artan</option>
@@ -201,9 +210,10 @@ const TodoFilter = () => {
                     </select>
                 </div>
 
-                <div id='filtre'>
+                <div id='filtre' className='mx-2 my-1'>
+                    Filtreleme: 
                     {/* status priority e göre filtreleme */}
-                    <select value={currentPriority} onChange={(e) => {
+                    <select  className=' border rounded-2xl text-center no-arrow mx-2 w-24' value={currentPriority} onChange={(e) => {
                         setCurrentPriority(e.target.value);
                     }}>
                         <option value="none">Priority</option>
@@ -211,18 +221,21 @@ const TodoFilter = () => {
                         <option value="medium">Medium</option>
                         <option value="high">High</option>
                     </select>
-                    <select value={currentStatus} onChange={(e) => {
+                    <select className=' border rounded-2xl text-center no-arrow mx-2 w-24' value={currentStatus} onChange={(e) => {
                         setCurrentStatus(e.target.value);
                     }}>
-                        <option value="none">Status</option>
-                        <option value="pending">Pending</option>
-                        <option value="in_progress">In progress</option>
-                        <option value="cancelled">Cancelled</option>
-                        <option value="completed">Completed</option>
+                        <option value="none" >Status</option>
+                        <option value="pending" >Pending</option>
+                        <option value="in_progress" >In progress</option>
+                        <option value="cancelled" >Cancelled</option>
+                        <option value="completed" >Completed</option>
                     </select>
                 </div>
             </div>
-    )
+        )
+    
+
+
 }
 
 export default TodoFilter
