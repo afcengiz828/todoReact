@@ -243,6 +243,7 @@ const IncomingTodos = () => {
                                                         <Link to={`../todoitem/${c.id}`} className="text-blue-600 dark:text-blue-200 hover:text-blue-800 dark:hover:text-blue-400">
                                                             {c.title}
                                                         </Link>
+                                                        
                                                     </td>
                                                     <td className='px-3 py-2' data-label="Description">
                                                         {c.description}
