@@ -103,14 +103,21 @@ const TodoForm = ({ }) => {
     };
 
     const onSubmit = async (data) => {
+        
+        if(data.status == "status"){
+            data.status = "";
+        }
+        if(data.priority == "priority"){
+            data.priority = "";
+        }
+
         console.log(data);
+
 
         if (data) {
 
-            console.log("String: ", typeof (data.due_date));
             data.due_date = data.due_date ? new Date(data.due_date) : data.due_date;
             data.due_date = data.due_date ? format(data.due_date, "yyyy-MM-dd") : data.due_date;
-            console.log("String: ", data.due_date);
         }
 
         if (!data.id) {
@@ -174,7 +181,7 @@ const TodoForm = ({ }) => {
 
                     </div>
                     <div className='flex justify-around'>
-                        <select {...register("status")} className=''>
+                        <select {...register("status")} className='text-gray-900 dark:text-gray-200 bg-gray-100 dark:bg-gray-600'>
                             <option value="status">Status</option>
                             <option value="pending">Pending</option>
                             <option value="in_progress">In Progress</option>
@@ -185,7 +192,7 @@ const TodoForm = ({ }) => {
                             {errors.status && errors.status.message}
                         </div>
 
-                        <select {...register("priority")}>
+                        <select {...register("priority")} className='text-gray-900 dark:text-gray-200 bg-gray-100 dark:bg-gray-600'>
                             <option value="priority">Priority</option>
                             <option value="low">Low</option>
                             <option value="medium">Medium</option>

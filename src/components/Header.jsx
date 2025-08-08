@@ -15,7 +15,7 @@ const Header = () => {
     return (
 
         // HEADER SECTION 
-        <header className='py-6 text-black dark:text-gray-200 font-poppins uppercase '>
+        <header className='py-6 text-black dark:text-gray-200 uppercase '>
             {/* HEADER CONTAINER */}
             <div className="container mx-auto flex items-center justify-between px-2 space-x-8">
                 {/* LOGO */}

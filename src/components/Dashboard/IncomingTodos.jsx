@@ -223,7 +223,7 @@ const IncomingTodos = () => {
 
                         <div className='flex-col justify-around mt-4'>
                             <div className='flex justify-center overflow-x-auto text-gray-900  dark:text-gray-100'>
-                                <table className='responsive-table w-full text-center text-xs bg-gray-300 dark:bg-gray-600 border-0 rounded-2xl p-2'>
+                                <table className='responsive-table text-gray-900 dark:text-gray-200 w-full text-center text-xs bg-gray-300 dark:bg-gray-600 border-0 rounded-2xl p-2'>
                                     <thead>
                                         <tr>
                                             <th className='px-3 py-2'>Title</th>
@@ -240,7 +240,7 @@ const IncomingTodos = () => {
                                             return (
                                                 <tr key={c.id}>
                                                     <td className='px-3 py-2' data-label="Title">
-                                                        <Link to={`../todoitem/${c.id}`} className="text-blue-600 hover:text-blue-800">
+                                                        <Link to={`../todoitem/${c.id}`} className="text-blue-600 dark:text-blue-200 hover:text-blue-800 dark:hover:text-blue-400">
                                                             {c.title}
                                                         </Link>
                                                     </td>
@@ -248,17 +248,30 @@ const IncomingTodos = () => {
                                                         {c.description}
                                                     </td>
                                                     <td className='px-3 py-2' data-label="Status">
-                                                        <select
-                                                            value={c.status}
-                                                            onChange={(e) => handleStatus(e, c.id)}
-                                                            className="bg-white border rounded px-2 py-1"
-                                                        >
-                                                            <option value="status">Status</option>
-                                                            <option value="pending">Pending</option>
-                                                            <option value="in_progress">In Progress</option>
-                                                            <option value="completed">Completed</option>
-                                                            <option value="cancelled">Cancelled</option>
-                                                        </select>
+                                                        {
+                                                            (() => {
+                                                                console.log(c.status)
+                                                                if (c.status) {
+                                                                    return (
+                                                                        <select
+                                                                            value={c.status}
+                                                                            onChange={(e) => handleStatus(e, c.id)}
+                                                                            className="bg-white dark:bg-gray-500 border rounded px-2 py-1"
+                                                                        >
+                                                                            <option value="status">Status</option>
+                                                                            <option value="pending">Pending</option>
+                                                                            <option value="in_progress">In Progress</option>
+                                                                            <option value="completed">Completed</option>
+                                                                            <option value="cancelled">Cancelled</option>
+                                                                        </select>
+                                                                    )
+                                                                }
+                                                                else {
+                                                                    return "";
+                                                                }
+                                                            
+                                                            }) ()
+                                                        }
                                                     </td>
                                                     <td className='px-3 py-2' data-label="Priority">
                                                         {priorityObj[c.priority]}

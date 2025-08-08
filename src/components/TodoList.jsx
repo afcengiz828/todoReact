@@ -13,7 +13,7 @@ const TodoList = () => {
     const todoSelector = useSelector((state) => state.todo);
     const allSelector = useSelector((state) => state.all);
 
-    const [pageCount, setPageCount] = useState(1);
+    //const [pageCount, setPageCount] = useState(1);
     const [list, setList] = useState([]);
 
     const priorityObj = {
@@ -214,7 +214,7 @@ const TodoList = () => {
                                             return (
                                                 <tr key={c.id}>
                                                     <td className='px-3 py-2' data-label="Title">
-                                                        <Link to={`../todoitem/${c.id}`} className="text-blue-600 hover:text-blue-800">
+                                                        <Link to={`../todoitem/${c.id}`} className="text-blue-600 dark:text-blue-200 hover:text-blue-800 dark:hover:text-blue-400">
                                                             {c.title}
                                                         </Link>
                                                     </td>
@@ -222,22 +222,35 @@ const TodoList = () => {
                                                         {c.description}
                                                     </td>
                                                     <td className='px-3 py-2' data-label="Status">
-                                                        <select
-                                                            value={c.status}
-                                                            onChange={(e) => handleStatus(e, c.id)}
-                                                            className="bg-white border rounded px-2 py-1"
-                                                        >
-                                                            <option value="status">Status</option>
-                                                            <option value="pending">Pending</option>
-                                                            <option value="in_progress">In Progress</option>
-                                                            <option value="completed">Completed</option>
-                                                            <option value="cancelled">Cancelled</option>
-                                                        </select>
+                                                        {
+                                                            (() => {
+                                                                console.log(c.status)
+                                                                if (c.status) {
+                                                                    return (
+                                                                        <select
+                                                                            value={c.status}
+                                                                            onChange={(e) => handleStatus(e, c.id)}
+                                                                            className="bg-white dark:bg-gray-500 border rounded px-2 py-1"
+                                                                        >
+                                                                            <option value="status">Status</option>
+                                                                            <option value="pending">Pending</option>
+                                                                            <option value="in_progress">In Progress</option>
+                                                                            <option value="completed">Completed</option>
+                                                                            <option value="cancelled">Cancelled</option>
+                                                                        </select>
+                                                                    )
+                                                                }
+                                                                else {
+                                                                    return "";
+                                                                }
+                                                            
+                                                            }) ()
+                                                        }
                                                     </td>
                                                     <td className='px-3 py-2' data-label="Priority">
                                                         {priorityObj[c.priority]}
                                                     </td>
-                                                    <td className='px-3 py-2' data-label="Due Date">
+                                                    <td className='px-3 py-2 whitespace-nowrap' data-label="Due Date">
                                                         {c.due_date ? c.due_date.split("T")[0] : ""}
                                                     </td>
                                                     <td className='px-3 py-2' data-label="Delete">
