@@ -241,6 +241,7 @@ const TodoForm = ({ }) => {
 
                     {setTimeout(() => {
                         setAddStatus(false)
+                        setUpdateStatus(false)
                     }, 3000)}
                 </div>
 

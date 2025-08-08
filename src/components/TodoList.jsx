@@ -110,8 +110,11 @@ const TodoList = () => {
         if (list.length == 0) {
             return (
                 <>
-                    <div className='text-center bg-red-500 p-4 border-0 rounded-2xl mt-4'>
-                        Aradığınız todo bulunamadı...
+                    <div className='bg-gray-200 dark:bg-gray-900'>
+
+                        <div className='text-center bg-red-500 p-4 border-0 rounded-2xl mt-4'>
+                            Aradığınız todo bulunamadı...
+                        </div>
                     </div>
                 </>
             )
@@ -119,92 +122,148 @@ const TodoList = () => {
         else {
 
             return (
+                <>
+                    <style>{`
+        @media (max-width: 767px) {
+          .responsive-table,
+          .responsive-table thead,
+          .responsive-table tbody,
+          .responsive-table th,
+          .responsive-table td,
+          .responsive-table tr {
+            display: block !important;
+          }
+          
+          .responsive-table thead tr {
+            position: absolute !important;
+            top: -9999px !important;
+            left: -9999px !important;
+          }
+          
+          .responsive-table tr {
+            border: 1px solid #ccc !important;
+            margin-bottom: 10px !important;
+            padding: 10px !important;
+            border-radius: 8px !important;
+            background: white !important;
+          }
+          
+          .responsive-table td {
+            border: none !important;
+            position: relative !important;
+            padding-left: 50% !important;
+            padding-top: 8px !important;
+            padding-bottom: 8px !important;
+          }
+          
+          .responsive-table td:before {
+            content: attr(data-label) ": " !important;
+            position: absolute !important;
+            left: 6px !important;
+            width: 45% !important;
+            padding-right: 10px !important;
+            white-space: nowrap !important;
+            font-weight: bold !important;
+            color: #666 !important;
+          }
+        }
+        
+        @media (min-width: 768px) {
+          .responsive-table {
+            display: table !important;
+          }
+          
+          .responsive-table thead {
+            display: table-header-group !important;
+          }
+          
+          .responsive-table tbody {
+            display: table-row-group !important;
+          }
+          
+          .responsive-table tr {
+            display: table-row !important;
+          }
+          
+          .responsive-table th,
+          .responsive-table td {
+            display: table-cell !important;
+          }
+        }
+      `}</style>
 
-                <div className='flex-col justify-around mt-4 '>
-                    <div className='flex justify-center text-gray-900 dark:text-gray-100'>
+                    <div className="p-4">
 
 
-                        <table className='w-8/9 h-full text-center bg-gray-300 dark:bg-gray-600 border-0 rounded-2xl p-2'>
-                            <thead>
-                                <tr>
-                                    <th className='px-3 py-2'>Id</th>
-                                    <th className='px-3 py-2'>Title</th>
-                                    <th className='px-3 py-2'>Description</th>
-                                    <th className='px-3 py-2'>Status</th>
-                                    <th className='px-3 py-2'>Priority</th>
-                                    <th className='px-3 py-2'>Due Date</th>
-                                    <th className='px-3 py-2'>Delete</th>
-                                    <th className='px-3 py-2'>Edit</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                                {list?.map((c) => {
-                                    return (
-
-
-                                        <tr key={c.id}>
-                                            <td className='px-3 py-2'>
-                                                <Link to={`/todoitem/${c.id}`} >
-                                                    {c.id}
-                                                </Link>
-                                            </td>
-                                            <td className='px-3 py-2'>
-                                                {c.title}
-
-                                            </td>
-                                            <td className='px-3 py-2'>{c.description}</td>
-                                            <td className='px-3 py-2 '>
-                                                <select value={c.status} onChange={(e) => {
-                                                    handleStatus(e, c.id)
-                                                }}>
-                                                    <option value="status" >Status</option>
-                                                    <option value="pending">Pending</option>
-                                                    <option value="in_progress">In Progress</option>
-                                                    <option value="completed">Completed</option>
-                                                    <option value="cancelled">Cancelled</option>
-                                                </select> <br />
-                                            </td>
-
-                                            <td className='px-3 py-2'>{priorityObj[c.priority]}</td>
-
-
-                                            <td className='w-auto px-3 py-2 text-nowrap'>{c.due_date ? c.due_date.split("T")[0] : ""}</td>
-
-
-                                            <td className='px-3 py-2'>
-                                                <button className='cursor-pointer' onClick={(e) => {
-                                                    handleDelete(e, c.id);
-                                                }}>Delete</button>
-
-                                            </td>
-                                            <td className='px-3 py-2'>
-                                                <Link to={`/tododetail/${c.id}`} >
-                                                    <div>Edit</div>
-                                                </Link>
-                                            </td>
+                        <div className='flex-col justify-around mt-4'>
+                            <div className='flex justify-center overflow-x-auto text-gray-900 dark:text-gray-100'>
+                                <table className='responsive-table w-full text-center text-xs bg-gray-300 dark:bg-gray-600 border-0 rounded-2xl p-2'>
+                                    <thead>
+                                        <tr>
+                                            <th className='px-3 py-2'>Title</th>
+                                            <th className='px-3 py-2'>Description</th>
+                                            <th className='px-3 py-2'>Status</th>
+                                            <th className='px-3 py-2'>Priority</th>
+                                            <th className='px-3 py-2'>Due Date</th>
+                                            <th className='px-3 py-2'>Delete</th>
+                                            <th className='px-3 py-2'>Edit</th>
                                         </tr>
-
-                                    )
-                                })}
-                            </tbody>
-                        </table>
-
+                                    </thead>
+                                    <tbody>
+                                        {list?.map((c) => {
+                                            return (
+                                                <tr key={c.id}>
+                                                    <td className='px-3 py-2' data-label="Title">
+                                                        <Link to={`../todoitem/${c.id}`} className="text-blue-600 hover:text-blue-800">
+                                                            {c.title}
+                                                        </Link>
+                                                    </td>
+                                                    <td className='px-3 py-2' data-label="Description">
+                                                        {c.description}
+                                                    </td>
+                                                    <td className='px-3 py-2' data-label="Status">
+                                                        <select
+                                                            value={c.status}
+                                                            onChange={(e) => handleStatus(e, c.id)}
+                                                            className="bg-white border rounded px-2 py-1"
+                                                        >
+                                                            <option value="status">Status</option>
+                                                            <option value="pending">Pending</option>
+                                                            <option value="in_progress">In Progress</option>
+                                                            <option value="completed">Completed</option>
+                                                            <option value="cancelled">Cancelled</option>
+                                                        </select>
+                                                    </td>
+                                                    <td className='px-3 py-2' data-label="Priority">
+                                                        {priorityObj[c.priority]}
+                                                    </td>
+                                                    <td className='px-3 py-2' data-label="Due Date">
+                                                        {c.due_date ? c.due_date.split("T")[0] : ""}
+                                                    </td>
+                                                    <td className='px-3 py-2' data-label="Delete">
+                                                        <button
+                                                            className='bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs'
+                                                            onClick={(e) => handleDelete(e, c.id)}
+                                                        >
+                                                            Delete
+                                                        </button>
+                                                    </td>
+                                                    <td className='px-3 py-2' data-label="Edit">
+                                                        <Link to={`../tododetail/${c.id}`}>
+                                                            <div className='bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs inline-block'>
+                                                                Edit
+                                                            </div>
+                                                        </Link>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-
-                        {/* <ReactPaginate
-                        previousLabel={"<<"}
-                        nextLabel={">>"}
-                        breakLabel={"..."}
-                        pageCount={pageCount}
-                        marginPagesDisplayed={2}
-                        pageRangeDisplayed={3}
-                        onPageChange={handlePageClick}
-                    /> */}
-
-                    </div>
-                </div>
+                </>
             )
 
         }

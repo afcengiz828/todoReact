@@ -11,13 +11,13 @@ export const TodoListPage = () => {
 
   const selector = useSelector(state => state.dark);
 
-    useEffect(() => {
-      if (selector.dark) {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
-    }, [selector.dark]);
+  useEffect(() => {
+    if (selector.dark) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [selector.dark]);
 
 
   const pageTransition = {
@@ -26,7 +26,7 @@ export const TodoListPage = () => {
     exit: { opacity: 0, x: 100 },
   };
   return (
-    <div className="bg-gray-50 dark:bg-gray-900 h-full">
+    <div className="bg-gray-50 dark:bg-gray-900 h-full dark:h-screen">
 
       <motion.div variants={pageTransition}
         initial="initial"
@@ -37,10 +37,12 @@ export const TodoListPage = () => {
 
         <Header />
         <div>
+          <div className='w-full flex justify-center'>
 
-          <section className='text-center flex justify-center'>
-            <TodoFilter />
-          </section>
+            <section className='text-center flex justify-center'>
+              <TodoFilter />
+            </section>
+          </div>
 
           <section  >
             <TodoList />

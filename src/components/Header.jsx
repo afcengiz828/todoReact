@@ -36,7 +36,7 @@ const Header = () => {
                     </div>
 
                     <div>
-                        <button className='cursor-pointer' onClick={() => dispatch(setDark())} aria-label="Toggle dark mode">
+                        <button className='cursor-pointer rounded-full bg-white' onClick={() => dispatch(setDark())} aria-label="Toggle dark mode">
                             <img
                                 src="/dark-theme-svgrepo-com.svg"
                                 alt="Koyu Tema Ikonu"

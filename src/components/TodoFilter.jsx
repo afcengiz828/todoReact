@@ -183,17 +183,21 @@ const TodoFilter = () => {
 
 
         return (
-            <div className='flex justify-between p2 '>
-                <div id='search' className='mx-2 my-1 text-gray-900 dark:text-gray-200'>
-                    Arama: 
-                    <input type="text" placeholder="Search.." className='mx-2 bg-transparent border-b border-red focus:outline-none' value={searchValue} onChange={(e) => {
+            <div className='flex flex-col md:flex-row justify-around md:justify-between p2 md:p-0 '>
+                <div id='search' className='mx-2 my-1 text-gray-900 dark:text-gray-200 md:w-44 flex flex-col md:flex-row justify-center md:justify-between'>
+                    <span className="text-center">
+                        Arama: 
+                    </span>
+                    <input type="text" placeholder="Search.." className='mx-2 w-32 bg-transparent border-b border-red focus:outline-none' value={searchValue} onChange={(e) => {
                         setSearchValue(e.target.value);
                     }}></input>
                 </div>
 
-                <div id='siralama' className='mx-2 my-1 text-gray-900 dark:text-gray-200'>
-                    Sıralama: 
-                    <select  className=' border rounded-2xl text-center no-arrow mx-2 w-24 dark:bg-gray-900' value={sortValue} onChange={(e) => {
+                <div id='siralama' className='mx-2 my-1 pt-2 md:pt-0 text-gray-900 dark:text-gray-200 flex flex-col items-center md:flex-row justify-between'>
+                    <span className="text-center">
+                        Sıralama: 
+                    </span>
+                    <select  className='mb-2 md:mb-0 border rounded-2xl text-center no-arrow mx-2 w-24 dark:bg-gray-900' value={sortValue} onChange={(e) => {
 
                         setSortValue(e.target.value);
 
@@ -210,10 +214,10 @@ const TodoFilter = () => {
                     </select>
                 </div>
 
-                <div id='filtre' className='mx-2 my-1 text-gray-900 dark:text-gray-200'>
+                <div id='filtre' className='mx-2 my-1 pt-2 md:pt-0 text-gray-900 dark:text-gray-200 flex flex-col items-center md:flex-row justify-center'>
                     Filtreleme: 
                     {/* status priority e göre filtreleme */}
-                    <select  className=' border rounded-2xl text-center no-arrow mx-2 w-24 dark:bg-gray-900' value={currentPriority} onChange={(e) => {
+                    <select  className='mb-2 md:mb-0 border rounded-2xl text-center no-arrow mx-2 w-24 dark:bg-gray-900' value={currentPriority} onChange={(e) => {
                         setCurrentPriority(e.target.value);
                     }}>
                         <option value="none">Priority</option>

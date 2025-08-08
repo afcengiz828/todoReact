@@ -53,9 +53,7 @@ const Dashboard = () => {
           </section>
 
           <section className=" py-6">
-            <div className="mx-auto overflow-x-auto rounded-lg shadow-md w-8/9 bg-amber-200 dark:bg-amber-200">
               <IncomingTodos />
-            </div>
           </section>
 
 
