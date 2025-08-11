@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { delTodo, getAllTodo, updateTodoStatus } from '../redux/features/todo/TodoSlice';
 import { Link, Links } from 'react-router-dom';
@@ -7,14 +7,20 @@ import { setFilteredStatus } from '../redux/features/todo/FilteredSlice';
 
 const TodoList = () => {
 
-
     const dispatch = useDispatch();
     const selector = useSelector((state) => state.filter);
     const todoSelector = useSelector((state) => state.todo);
     const allSelector = useSelector((state) => state.all);
+    const prevRef = useRef(null);
+    const nextRef = useRef(null);
 
-    const [pageCount, setPageCount] = useState(1);
     const [list, setList] = useState([]);
+    const [currentTodos, setCurrentTodos] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1); // 9'dan 1'e değiştirdim
+    const [todosPerPage, setTodosPerPage] = useState(10);
+
+    const lastTodoIndex = currentPage * todosPerPage;
+    const firstTodoIndex = lastTodoIndex - todosPerPage;
 
     const priorityObj = {
         "low": "Low",
@@ -22,50 +28,72 @@ const TodoList = () => {
         "high": "High"
     }
 
-    var limit = 10
-
+    var limit = 10;
+    
+    // Toplam sayfa sayısını hesapla
+    const totalPages = Math.ceil((selector.filterStatus ? selector.filteredTodos.length : allSelector.dataCount) / todosPerPage);
 
     useEffect(() => {
         if (selector.filteredTodos.length > 0) {
-
-            var count = Math.ceil(allSelector.dataCount / 10);
-
             if (selector.filterStatus) {
-                //console.log(selector.filteredTodos);  
-                setList(selector.filteredTodos);
-
-
+                console.log(selector.filterStatus);  
+                setCurrentTodos(selector.filteredTodos.slice(firstTodoIndex, lastTodoIndex));
             } else {
                 console.log(selector.filterStatus);
-
-                setList(todoSelector.data);
+                setCurrentTodos(allSelector.allTodos.slice(firstTodoIndex, lastTodoIndex));
             }
-            setPageCount(count);
-            //console.log(selector.filteredTodos);
         } else {
-            setList([]);
+            console.log(selector.filteredTodos);
+            // allTodos'dan al
+            setCurrentTodos(allSelector.allTodos?.slice(firstTodoIndex, lastTodoIndex) || []);
         }
-    }, [selector.filteredTodos, selector.filterStatus]);
+    }, [selector.filteredTodos, selector.filterStatus, currentPage, firstTodoIndex, lastTodoIndex, allSelector.allTodos]);
 
-    async function fetchData(page, limit) {
-        if (!limit) {
-            limit = 10
+    useEffect(() => {
+        if (list.length > 0) {
+            setCurrentTodos(list.slice(firstTodoIndex, lastTodoIndex));
+        }
+    }, [list, currentPage, firstTodoIndex, lastTodoIndex]);
+
+    // Prev/Next butonlarının durumunu kontrol et
+    const isPrevDisabled = currentPage <= 1;
+    const isNextDisabled = currentPage >= totalPages;
+
+    useEffect(() => {
+        // Prev butonunu güncelle
+        if (prevRef.current) {
+            if (isPrevDisabled) {
+                prevRef.current.classList.add("disabled");
+            } else {
+                prevRef.current.classList.remove("disabled");
+            }
         }
 
-        await dispatch(getAllTodo(`?page=${page}&limit=${limit}`)).then((response) => {
-            if (response.type == "gettodo/fulfilled") {
-                console.log("Veri başarıyla yüklendi.", response);
+        // Next butonunu güncelle
+        if (nextRef.current) {
+            if (isNextDisabled) {
+                nextRef.current.classList.add("disabled");
+            } else {
+                nextRef.current.classList.remove("disabled");
             }
-            else {
-                console.log(response);
-            }
-        })
-    }
+        }
+    }, [currentPage, isPrevDisabled, isNextDisabled]);
+
+    const handlePrevious = () => {
+        if (!isPrevDisabled) {
+            setCurrentPage(prev => prev - 1);
+        }
+    };
+
+    const handleNext = () => {
+        if (!isNextDisabled) {
+            setCurrentPage(prev => prev + 1);
+        }
+    };
 
     const handleDelete = async (e, id) => {
         const response = await dispatch(delTodo(id));
         console.log(response.payload.data);
-
     }
 
     const handleStatus = async (e, id) => {
@@ -82,19 +110,8 @@ const TodoList = () => {
         }
         console.log(data)
         const response = await dispatch(updateTodoStatus(data));
-        //window.location.reload(); //Alternatif ne kullanabiliriz sayfayı yenilemeden sadece render edecek birşey.
-
         console.log(response);
     }
-
-    const handlePageClick = (data) => {
-        console.log(data.selected + 1);
-        fetchData(data.selected + 1, 10);
-        if (selector.filterStatus) {
-            dispatch(setFilteredStatus(false));
-        }
-    }
-
 
     if (todoSelector.loading) {
         return (
@@ -106,12 +123,10 @@ const TodoList = () => {
         )
     } else {
 
-
-        if (list.length == 0) {
+        if (currentTodos.length == 0) {
             return (
                 <>
                     <div className='bg-gray-200 dark:bg-gray-900'>
-
                         <div className='text-center bg-red-500 p-4 border-0 rounded-2xl mt-4'>
                             Aradığınız todo bulunamadı...
                         </div>
@@ -190,11 +205,15 @@ const TodoList = () => {
             display: table-cell !important;
           }
         }
+
+        .disabled {
+            pointer-events: none;
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
       `}</style>
 
-                    <div className="p-4">
-
-
+                    <div className="p-4 w-screen flex-col justify-center items-center">
                         <div className='flex-col justify-around mt-4'>
                             <div className='flex justify-center overflow-x-auto text-gray-900 dark:text-gray-100'>
                                 <table className='responsive-table w-full text-center text-xs bg-gray-300 dark:bg-gray-600 border-0 rounded-2xl p-2'>
@@ -210,7 +229,7 @@ const TodoList = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {list?.map((c) => {
+                                        {currentTodos.map((c) => {
                                             return (
                                                 <tr key={c.id}>
                                                     <td className='px-3 py-2' data-label="Title">
@@ -272,6 +291,28 @@ const TodoList = () => {
                                         })}
                                     </tbody>
                                 </table>
+                            </div>
+                        </div>
+
+                        <div className='flex justify-center mt-4'>
+                            <div className='bg-gray-300 dark:bg-gray-600 text-gray-900 dark:text-gray-100 h-8 w-64 border-0 rounded-2xl flex justify-center'>
+                                <div 
+                                    ref={prevRef} 
+                                    className='w-1/3 h-full flex justify-center items-center cursor-pointer disabled' 
+                                    onClick={handlePrevious}
+                                >
+                                    Prev
+                                </div>
+                                <div className='w-1/3 h-full flex justify-center items-center'>
+                                    {currentPage} / {totalPages}
+                                </div>
+                                <div 
+                                    ref={nextRef} 
+                                    className='w-1/3 h-full flex justify-center items-center cursor-pointer' 
+                                    onClick={handleNext}
+                                >
+                                    Next
+                                </div>
                             </div>
                         </div>
                     </div>

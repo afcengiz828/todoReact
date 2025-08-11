@@ -26,7 +26,7 @@ export const TodoListPage = () => {
     exit: { opacity: 0, x: 100 },
   };
   return (
-    <div className="bg-gray-50 dark:bg-gray-900 h-full dark:h-screen">
+    <div className="bg-gray-50 dark:bg-gray-900 h-screen dark:h-screen">
 
       <motion.div variants={pageTransition}
         initial="initial"

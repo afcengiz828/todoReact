@@ -21,10 +21,10 @@ const TodoFilter = () => {
     const [searchValue, setSearchValue] = useState("");
     const [sortValueDirection, setSortValueDirection] = useState("asc");
     const [sortValue, setSortValue] = useState("id");
-    const [filter, setFilter] = useState(true);
 
     useEffect(() => {
         if ((currentPriority != "none" || currentStatus != "none" || searchValue.trim())) {
+            console.log("filterstatus true oldu");
             dispatch(setFilteredStatus(true));
         }
         else {
