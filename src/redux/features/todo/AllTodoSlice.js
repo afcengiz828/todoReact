@@ -23,7 +23,10 @@ export const AllTodoSlice = createSlice({
             builder
                 .addCase(delTodo.fulfilled, (state, action) => {
                     const deletedTodo = action.payload.data.data;
+                    console.log(current(state.allTodos));
                     state.allTodos = state.allTodos.filter(todo => todo.id !== deletedTodo.id);
+                    console.log(state.allTodos);
+                    console.log(deletedTodo);
                 })
                 .addCase(updateTodoStatus.fulfilled, (state, action) => {
                     const updatedTodo = action.payload.data.data;

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import SpecialStats from '../components/Dashboard/SpecialStats'
 import IncomingTodos from '../components/Dashboard/IncomingTodos'
 import Header from '../components/Header'
-import ModalExample from '../components/ModalExample'
 import { motion } from "framer-motion";
 import { useDispatch, useSelector } from 'react-redux'
 

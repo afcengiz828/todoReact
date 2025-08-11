@@ -102,6 +102,8 @@ export const TodoSlice = createSlice({
                 
                 //console.log(action.payload);
                 if(action.payload != undefined && action.payload.data.status == "succes"){
+                    const deletedTodo = action.payload.data.data;
+                    state.data = state.data.filter(todo => todo.id !== deletedTodo.id);
 
                     state.loading = false;
                 } else {

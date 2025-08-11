@@ -13,7 +13,7 @@ const TodoList = () => {
     const todoSelector = useSelector((state) => state.todo);
     const allSelector = useSelector((state) => state.all);
 
-    //const [pageCount, setPageCount] = useState(1);
+    const [pageCount, setPageCount] = useState(1);
     const [list, setList] = useState([]);
 
     const priorityObj = {
@@ -224,7 +224,6 @@ const TodoList = () => {
                                                     <td className='px-3 py-2' data-label="Status">
                                                         {
                                                             (() => {
-                                                                console.log(c.status)
                                                                 if (c.status) {
                                                                     return (
                                                                         <select
@@ -243,8 +242,8 @@ const TodoList = () => {
                                                                 else {
                                                                     return "";
                                                                 }
-                                                            
-                                                            }) ()
+
+                                                            })()
                                                         }
                                                     </td>
                                                     <td className='px-3 py-2' data-label="Priority">

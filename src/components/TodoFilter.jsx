@@ -133,8 +133,7 @@ const TodoFilter = () => {
             data = [...originalTodos];
         }
 
-        data = handleSearch(searchValue, data);
-        console.log(data);
+        data = handleSearch(searchValue, data); 
 
         if (data.length == 0) {
             dispatch(setFiltered(data))
@@ -237,7 +236,7 @@ const TodoFilter = () => {
                 </div>
             </div>
         )
-    
+
 
 
 }

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { delTodo, updateTodoStatus } from '../../redux/features/todo/TodoSlice';
-import ModalExample from '../ModalExample';
 import { CheckCircle, Circle, AlertTriangle, ChevronUp, ChevronDown, Minus, XCircle } from 'lucide-react';
+import DeleteConfirmationModal from '../DeleteConfirmationModal';
 
 const IncomingTodos = () => {
 
@@ -11,9 +11,36 @@ const IncomingTodos = () => {
     const todo = useSelector(state => state.todo);
 
     const [data, setData] = useState([]);
-    const [isOpen, setIsOpen] = useState(true);
+    // const [isOpen, setIsOpen] = useState(true);
 
     const dispatch = useDispatch();
+
+    const [deleteModal, setDeleteModal] = useState({
+        isOpen: false,
+        todoId: null,
+        todoText: ""
+    });
+
+    const openDeleteModal = (id, text) => {
+        setDeleteModal({
+            isOpen: true,
+            todoId: id,
+            todoText: text
+        });
+    };
+
+    const closeDeleteModal = () => {
+        setDeleteModal({
+            isOpen: false,
+            todoId: null,
+            todoText: ""
+        });
+    };
+
+    const confirmDelete = (e) => {
+        console.log(deleteModal.todoId);
+        handleDelete(e,deleteModal.todoId);
+    };
 
     const priorityObj = {
         "low": "Low",
@@ -27,12 +54,16 @@ const IncomingTodos = () => {
 
     }, [selector.allTodos]);
 
+    useEffect(() => {
+    })
+
 
     const handleDelete = async (e, id) => {
         const response = await dispatch(delTodo(id));
-        if (response.payload.status == "succes") {
-            setIsOpen(true);
-        }
+
+        // if (response.payload.status == "succes") {
+        //     setIsOpen(true);
+        // }
     }
 
 
@@ -243,7 +274,7 @@ const IncomingTodos = () => {
                                                         <Link to={`../todoitem/${c.id}`} className="text-blue-600 dark:text-blue-200 hover:text-blue-800 dark:hover:text-blue-400">
                                                             {c.title}
                                                         </Link>
-                                                        
+
                                                     </td>
                                                     <td className='px-3 py-2' data-label="Description">
                                                         {c.description}
@@ -251,7 +282,6 @@ const IncomingTodos = () => {
                                                     <td className='px-3 py-2' data-label="Status">
                                                         {
                                                             (() => {
-                                                                console.log(c.status)
                                                                 if (c.status) {
                                                                     return (
                                                                         <select
@@ -270,8 +300,8 @@ const IncomingTodos = () => {
                                                                 else {
                                                                     return "";
                                                                 }
-                                                            
-                                                            }) ()
+
+                                                            })()
                                                         }
                                                     </td>
                                                     <td className='px-3 py-2' data-label="Priority">
@@ -283,7 +313,7 @@ const IncomingTodos = () => {
                                                     <td className='px-3 py-2' data-label="Delete">
                                                         <button
                                                             className='bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs'
-                                                            onClick={(e) => handleDelete(e, c.id)}
+                                                            onClick={() => openDeleteModal(c.id, c.text)}
                                                         >
                                                             Delete
                                                         </button>
@@ -302,6 +332,13 @@ const IncomingTodos = () => {
                                 </table>
                             </div>
                         </div>
+                        <DeleteConfirmationModal
+                            isOpen={deleteModal.isOpen}
+                            onClose={closeDeleteModal}
+                            onConfirm={confirmDelete}
+                            itemName={deleteModal.todoText}
+                            title="Todo Sil"
+                        />
                     </div>
                 </>
             )
