@@ -16,8 +16,8 @@ function App() {
 
 
 
-  async function fetchData(url) {
-    await dispatch(getAllTodo(url ? url : "")).then((response) => {
+  async function fetchData() {
+    await dispatch(getAllTodo()).then((response) => {
       if (response.type == "gettodo/fulfilled") {
         console.log("Veri başarıyla yüklendi.", response);
       }
@@ -29,7 +29,7 @@ function App() {
 
   async function fetchCat() {
     await dispatch(getAllCategories()).then((response) => {
-      if (response.type == "gettodo/fulfilled") {
+      if (response.type == "getcategory/fulfilled") {
         console.log("Veri başarıyla yüklendi.", response);
       }
       else {

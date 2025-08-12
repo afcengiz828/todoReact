@@ -3,6 +3,7 @@ import axios from 'axios';
 import React from 'react'
 import { delFiltered } from './FilteredSlice';
 import { useDispatch } from 'react-redux';
+import { updateCategories } from '../categories/AllCategoriesSlice';
 
 const initialState = {
     status: "",
@@ -147,6 +148,12 @@ export const TodoSlice = createSlice({
                 state.status = action.payload.data.status;
                 state.messages = action.payload.data.message;
                 state.loading = false;
+            })
+            .addCase(updateCategories.fulfilled, (state, action) => {
+                state.loading = false;
+                const index = state.data.findIndex(c => c.id == action.payload.category.id);
+                console.log(action.payload.category)
+                state.data[index].categories = action.payload.category;
             })
 
     }

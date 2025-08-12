@@ -32,6 +32,9 @@ const Header = () => {
                         <Link to={'../tododetail'} >
                             <a href="#" className='hover:text-amber-400 transition duration-300 text-xl sm:text-2xl'>Add</a>
                         </Link>
+                        <Link to={'../categories'} >
+                            <a href="#" className='hover:text-amber-400 transition duration-300 text-xl sm:text-2xl'>Cat</a>
+                        </Link>
 
                     </div>
 

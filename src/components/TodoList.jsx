@@ -11,6 +11,7 @@ const TodoList = () => {
     const selector = useSelector((state) => state.filter);
     const todoSelector = useSelector((state) => state.todo);
     const allSelector = useSelector((state) => state.all);
+    const categorySelector = useSelector((state) => state.categories);
     const prevRef = useRef(null);
     const nextRef = useRef(null);
 
@@ -56,7 +57,7 @@ const TodoList = () => {
             // allTodos'dan al
             setCurrentTodos(allSelector.allTodos?.slice(firstTodoIndex, lastTodoIndex) || []);
         }
-    }, [selector.filteredTodos, selector.filterStatus, currentPage, firstTodoIndex, lastTodoIndex, allSelector.allTodos]);
+    }, [selector.filteredTodos, selector.filterStatus, currentPage, firstTodoIndex, lastTodoIndex, allSelector.allTodos, categorySelector.data]);
 
     useEffect(() => {
         if (list.length > 0) {
@@ -88,6 +89,8 @@ const TodoList = () => {
         }
     }, [currentPage, isPrevDisabled, isNextDisabled, totalPages]);
 
+
+ 
     const handlePrevious = () => {
         if (!isPrevDisabled) {
             setCurrentPage(prev => prev - 1);
@@ -156,79 +159,79 @@ const TodoList = () => {
             return (
                 <>
                     <style>{`
-        @media (max-width: 767px) {
-          .responsive-table,
-          .responsive-table thead,
-          .responsive-table tbody,
-          .responsive-table th,
-          .responsive-table td,
-          .responsive-table tr {
-            display: block !important;
-          }
-          
-          .responsive-table thead tr {
-            position: absolute !important;
-            top: -9999px !important;
-            left: -9999px !important;
-          }
-          
-          .responsive-table tr {
-            border: 1px solid #ccc !important;
-            margin-bottom: 10px !important;
-            padding: 10px !important;
-            border-radius: 8px !important;
-            background: white !important;
-          }
-          
-          .responsive-table td {
-            border: none !important;
-            position: relative !important;
-            padding-left: 50% !important;
-            padding-top: 8px !important;
-            padding-bottom: 8px !important;
-          }
-          
-          .responsive-table td:before {
-            content: attr(data-label) ": " !important;
-            position: absolute !important;
-            left: 6px !important;
-            width: 45% !important;
-            padding-right: 10px !important;
-            white-space: nowrap !important;
-            font-weight: bold !important;
-            color: #666 !important;
-          }
-        }
-        
-        @media (min-width: 768px) {
-          .responsive-table {
-            display: table !important;
-          }
-          
-          .responsive-table thead {
-            display: table-header-group !important;
-          }
-          
-          .responsive-table tbody {
-            display: table-row-group !important;
-          }
-          
-          .responsive-table tr {
-            display: table-row !important;
-          }
-          
-          .responsive-table th,
-          .responsive-table td {
-            display: table-cell !important;
-          }
-        }
+                        @media (max-width: 767px) {
+                        .responsive-table,
+                        .responsive-table thead,
+                        .responsive-table tbody,
+                        .responsive-table th,
+                        .responsive-table td,
+                        .responsive-table tr {
+                            display: block !important;
+                        }
+                        
+                        .responsive-table thead tr {
+                            position: absolute !important;
+                            top: -9999px !important;
+                            left: -9999px !important;
+                        }
+                        
+                        .responsive-table tr {
+                            border: 1px solid #ccc !important;
+                            margin-bottom: 10px !important;
+                            padding: 10px !important;
+                            border-radius: 8px !important;
+                            background: white !important;
+                        }
+                        
+                        .responsive-table td {
+                            border: none !important;
+                            position: relative !important;
+                            padding-left: 50% !important;
+                            padding-top: 8px !important;
+                            padding-bottom: 8px !important;
+                        }
+                        
+                        .responsive-table td:before {
+                            content: attr(data-label) ": " !important;
+                            position: absolute !important;
+                            left: 6px !important;
+                            width: 45% !important;
+                            padding-right: 10px !important;
+                            white-space: nowrap !important;
+                            font-weight: bold !important;
+                            color: #666 !important;
+                        }
+                        }
+                        
+                        @media (min-width: 768px) {
+                        .responsive-table {
+                            display: table !important;
+                        }
+                        
+                        .responsive-table thead {
+                            display: table-header-group !important;
+                        }
+                        
+                        .responsive-table tbody {
+                            display: table-row-group !important;
+                        }
+                        
+                        .responsive-table tr {
+                            display: table-row !important;
+                        }
+                        
+                        .responsive-table th,
+                        .responsive-table td {
+                            display: table-cell !important;
+                        }
+                        }
 
-        .disabled {
-            pointer-events: none;
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-      `}</style>
+                        .disabled {
+                            pointer-events: none;
+                            opacity: 0.5;
+                            cursor: not-allowed;
+                        }
+                    `}</style>
 
                     <div className="p-4 w-screen flex-col justify-center items-center">
                         <div className='flex-col justify-around mt-4'>
@@ -236,6 +239,7 @@ const TodoList = () => {
                                 <table className='responsive-table w-full text-center text-xs bg-gray-300 dark:bg-gray-600 border-0 rounded-2xl p-2'>
                                     <thead>
                                         <tr>
+                                            <th className='px-3 py-2'>Category</th>
                                             <th className='px-3 py-2'>Title</th>
                                             <th className='px-3 py-2'>Description</th>
                                             <th className='px-3 py-2'>Status</th>
@@ -249,6 +253,11 @@ const TodoList = () => {
                                         {currentTodos.map((c) => {
                                             return (
                                                 <tr key={c.id}>
+                                                    <td className='px-3 py-2' data-label="Title">
+                                                        <Link to={`../todoitem/${c.id}`} style={{color:c.categories.color}} className="text-blue-600 dark:text-blue-200 hover:text-blue-800 dark:hover:text-blue-400">
+                                                            {c.categories.name}
+                                                        </Link>
+                                                    </td>
                                                     <td className='px-3 py-2' data-label="Title">
                                                         <Link to={`../todoitem/${c.id}`} className="text-blue-600 dark:text-blue-200 hover:text-blue-800 dark:hover:text-blue-400">
                                                             {c.title}
