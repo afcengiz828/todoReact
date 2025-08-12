@@ -13,8 +13,6 @@ const initialState = {
     error: null
 
 }
-//bb3df6cb446c
-
 
 export const getAllTodo = createAsyncThunk("gettodo", async (url) => {
 
@@ -67,7 +65,6 @@ export const TodoSlice = createSlice({
                 state.messages = action.payload.messages;
 
                 state.data = action.payload.data;
-                console.log(state.data);
                 state.dataCount = action.payload.count;
 
                 state.loading = false;

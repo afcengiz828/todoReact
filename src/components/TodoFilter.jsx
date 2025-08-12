@@ -196,7 +196,7 @@ const TodoFilter = () => {
                     <span className="text-center">
                         Sıralama: 
                     </span>
-                    <select  className='mb-2 md:mb-0 border rounded-2xl text-center no-arrow mx-2 w-24 dark:bg-gray-900' value={sortValue} onChange={(e) => {
+                    <select  className='mb-2 md:mb-0 border rounded-2xl text-center no-arrow mx-2 w-32 dark:bg-gray-900' value={sortValue} onChange={(e) => {
 
                         setSortValue(e.target.value);
 
