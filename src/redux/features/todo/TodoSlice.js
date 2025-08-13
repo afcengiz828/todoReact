@@ -81,7 +81,7 @@ export const TodoSlice = createSlice({
             .addCase(addTodo.fulfilled, (state, action) => {
                 console.log(action.payload)
                 if (action.payload != undefined) {
-                    state.data.push(action.payload.data)
+                    state.data.push(action.payload.data);
                     state.loading = false;
                 } else {
                     console.log("Undefined veri yakalandı");
@@ -136,6 +136,9 @@ export const TodoSlice = createSlice({
             })
             .addCase(updateTodo.fulfilled, (state, action) => {
                 console.log(action.payload.data.data);
+                const todo = action.payload.data.data;
+                const index = state.data.findIndex(c => c.id == todo.id);
+                state.data[index] = todo;
 
                 state.loading = false;
             })

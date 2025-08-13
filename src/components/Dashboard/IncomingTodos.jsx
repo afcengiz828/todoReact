@@ -39,7 +39,7 @@ const IncomingTodos = () => {
 
     const confirmDelete = (e) => {
         console.log(deleteModal.todoId);
-        handleDelete(e,deleteModal.todoId);
+        handleDelete(e, deleteModal.todoId);
     };
 
     const priorityObj = {
@@ -257,6 +257,7 @@ const IncomingTodos = () => {
                                 <table className='responsive-table text-gray-900 dark:text-gray-200 w-full text-center text-xs bg-gray-300 dark:bg-gray-600 border-0 rounded-2xl p-2'>
                                     <thead>
                                         <tr>
+                                            <th className='px-3 py-2'>Category</th>
                                             <th className='px-3 py-2'>Title</th>
                                             <th className='px-3 py-2'>Description</th>
                                             <th className='px-3 py-2'>Status</th>
@@ -270,6 +271,10 @@ const IncomingTodos = () => {
                                         {data?.map((c) => {
                                             return (
                                                 <tr key={c.id}>
+                                                    <td className='px-3 py-2' data-label="Category" style={{ color: c.categories.color }}>
+                                                        {c.categories.name}
+
+                                                    </td>
                                                     <td className='px-3 py-2' data-label="Title">
                                                         <Link to={`../todoitem/${c.id}`} className="text-blue-600 dark:text-blue-200 hover:text-blue-800 dark:hover:text-blue-400">
                                                             {c.title}

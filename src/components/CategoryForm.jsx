@@ -1,9 +1,9 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from "yup";
-import { addCategories, updateCategories } from '../redux/features/categories/AllCategoriesSlice';
+import { addCategories, setError, updateCategories } from '../redux/features/categories/AllCategoriesSlice';
 
 const CategoryForm = () => {
 
@@ -22,6 +22,7 @@ const CategoryForm = () => {
     });
 
     const dispatch = useDispatch();
+    const [err, setErr] = useState(false);
 
     useEffect(() => {
         if (selector.id && selector.id != undefined) {
@@ -32,35 +33,73 @@ const CategoryForm = () => {
             setValue("name", data.name)
             setValue("color", data.color)
             setValue("id", data.id)
-        }else{
+        } else {
             setValue("name", "")
             setValue("color", "#000000")
             setValue("id", "")
         }
     }, [selector.id])
 
-    const onSubmit = async (data) => {
-        console.log(data);
-        var category = {
-            "name": data.name,
-            "color": data.color
+    useEffect(() => {
+        if (selector.error) {
+            setErr(true);
         }
-        console.log(data.color)
 
-        if (data) {
-            if (data.id) {
-                console.log(data);
-                console.log(category);
-                dispatch(updateCategories([category, data.id]))
-            } else {
-                dispatch(addCategories(category));
+    }, [selector.error])
+
+    const onSubmit = (data) => {
+        console.log(data); //id boş
+        const same = selector.data.filter(c => c.name.toLowerCase() == data.name.toLowerCase());
+        console.log(same)
+        if (same.length > 0 && !data.id) {
+            dispatch(setError("Aynı kategori db'de zaten var."));
+        } else {
+            console.log("else çalıştı")
+            var category = {
+                "name": data.name,
+                "color": data.color
+            }
+            console.log(data.color)
+            if (data) {
+                if (data.id) {
+                    console.log(data);
+                    console.log(category);
+                    dispatch(updateCategories([category, data.id]))
+                } else {
+                    dispatch(addCategories(category));
+                }
             }
         }
     }
 
+    const clearForm = () => {
+        console.log("clear form çalıştı")
+        setValue("name", "");
+        setValue("color", "#000000");
+        setValue("id", "");
+    }
+
     return (
         <div className='h-full bg-gray-50 text-gray-500 dark:bg-gray-900  dark:text-gray-100'>
-            <form onSubmit={handleSubmit(onSubmit)} className='m-2 p-4 border-0 rounded-2xl w-96 bg-gray-300 dark:bg-gray-600 text-gray-900 dark:text-gray-200'>
+            {/* Error mesajını göster */}
+            {selector.error && err && (
+                <div className="mb-4 p-2 bg-red-100 border-0 border-red-400 text-red-700 rounded">
+                    {selector.error}
+                </div>
+            )}
+            
+                    <div className='opacity-0'>
+                       { setTimeout(() => {
+                            dispatch(setError(""));
+                            setErr(false);
+                            setValue("name", "");
+                            setValue("color", "#000000");
+
+                        }, 3000)}
+                    </div>
+                
+
+            <form onSubmit={handleSubmit(onSubmit)} className='m-2 p-4 border-0 rounded-2xl w-64 md:w-96 bg-gray-300 dark:bg-gray-600 text-gray-900 dark:text-gray-200'>
                 <div class="flex justify-center p-2">
                     <input {...register("name")} className='ml-2 w-full bg-transparent border-b border-red focus:outline-none' type="text" placeholder="Category Name" />
                 </div>
@@ -76,8 +115,11 @@ const CategoryForm = () => {
                     <input {...register("id")} className='opacity-0 ml-2 w-0 h-0 bg-transparent border-b border-red focus:outline-none' type="text" id="id" placeholder="Id not required" />
                 </div>
 
-                <div class="mt-2">
-                    <button type='submit' className='w-full p-2 text-center bg-indigo-600 text-gray-50 rounded-2xl cursor-pointer'>Submit</button>
+                <div class="mt-2 flex justify-center">
+                    <button type='submit' className='w-2/3 mr-1 p-2 text-center bg-indigo-600 text-gray-50 rounded-2xl cursor-pointer'>Submit</button>
+                    <button type='reset' className='w-1/3 ml-1 p-2 text-center bg-indigo-600 text-gray-50 rounded-2xl cursor-pointer'
+                        onClick={clearForm}
+                    >Clear</button>
                 </div>
             </form>
         </div>

@@ -8,27 +8,30 @@ const Categories = () => {
 
   const selector = useSelector(state => state.dark);
 
-    useEffect(() => {
-        if (selector.dark) {
-          document.documentElement.classList.add("dark");
-        } else {
-          document.documentElement.classList.remove("dark");
-        }
-      }, [selector.dark]);
+  useEffect(() => {
+    if (selector.dark) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [selector.dark]);
 
   return (
-    <div className='bg-gray-50 dark:bg-gray-900 h-screen'>
-        <center>
+    <div className='bg-gray-50 dark:bg-gray-900 h-full'>
+      <center>
 
         <Header />
-    {/* Kategori ekleme formu */}
-    <CategoryForm />
-    {/* Kategori Listesi */}
-    <CategoryList />
-    {/* Kategori Düzenleme Sayfasına yönlendirme  */}
-        </center>
+
+        {/* Kategori ekleme formu */}
+        <CategoryForm />
+
+        {/* Kategori Listesi */}
+        <CategoryList />
+        
+        
+      </center>
     </div>
-    
+
   )
 }
 

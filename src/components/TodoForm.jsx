@@ -52,6 +52,7 @@ const TodoForm = ({ }) => {
 
     const dispatch = useDispatch();
     var selector = useSelector(state => state.filter);
+    var categorySelector = useSelector(state => state.categories);
 
     const { idTodo } = useParams();
     const [todos, setTodos] = useState([]);
@@ -102,17 +103,33 @@ const TodoForm = ({ }) => {
 
     };
 
+    const getCategory = (c) => {
+        console.log(categorySelector.data);
+        console.log(c)
+        const category = categorySelector.data.filter(cat => cat.name.toLowerCase() == c.toLowerCase())
+        console.log(category)
+        return category[0];
+    }
+
     const onSubmit = async (data) => {
-        
-        if(data.status == "status"){
+
+        if (data.status == "status"){
             data.status = "";
         }
-        if(data.priority == "priority"){
+        if (data.priority == "priority"){
             data.priority = "";
         }
 
         console.log(data);
-
+        const c = getCategory(data.categories);
+        
+        const category = {
+            "name" : c.name,
+            "color" : c.color
+        }
+        const categoryId = c.id;
+        data.categories = category;
+        data.categories_id = categoryId;
 
         if (data) {
 
@@ -167,6 +184,23 @@ const TodoForm = ({ }) => {
             <div className='flex justify-center'>
 
                 <form onSubmit={handleSubmit(onSubmit)} className='mt-2 p-4 rounded-2xl  bg-gray-100 dark:bg-gray-600 w-lg text-gray-900 dark:text-gray-200'>
+
+                    <div className='flex justify-center'>
+                        <label className='mr-4'>Select Category:</label>
+                        <select {...register("categories")} className='text-gray-900 dark:text-gray-200 bg-gray-100 dark:bg-gray-600'>
+                            <option value="">Category</option>
+                            {
+                                categorySelector.data.map((c) => {
+                                    return (
+                                        <option style={{backgroundColor:c.color}} value={c.name.toLowerCase()}>{c.name}</option>
+                                    )
+                                })
+                             }
+                        </select> <br />
+                        <div className='text-red-600 font-bold'>
+                            {errors.category && errors.category.message}
+                        </div>
+                    </div>
                     <div className='m-2'>
                         <input {...register("title")} type="text" placeholder='Title' className='w-full bg-transparent border-b border-red focus:outline-none' /> <br></br>
                         <div className='text-red-600 font-bold'>

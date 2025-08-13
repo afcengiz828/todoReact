@@ -17,7 +17,7 @@ const TodoList = () => {
 
     const [list, setList] = useState([]);
     const [currentTodos, setCurrentTodos] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1); 
+    const [currentPage, setCurrentPage] = useState(1);
     const [todosPerPage, setTodosPerPage] = useState(10);
 
     const lastTodoIndex = currentPage * todosPerPage;
@@ -30,7 +30,7 @@ const TodoList = () => {
     }
 
     var limit = 10;
-    
+
     // Toplam sayfa sayısını hesapla
     const totalPages = Math.ceil((selector.filterStatus ? selector.filteredTodos.length : allSelector.dataCount) / todosPerPage);
 
@@ -46,14 +46,14 @@ const TodoList = () => {
     useEffect(() => {
         if (selector.filteredTodos.length > 0) {
             if (selector.filterStatus) {
-                console.log(selector.filterStatus);  
+
                 setCurrentTodos(selector.filteredTodos.slice(firstTodoIndex, lastTodoIndex));
             } else {
-                console.log(selector.filterStatus);
+
                 setCurrentTodos(allSelector.allTodos.slice(firstTodoIndex, lastTodoIndex));
             }
         } else {
-            console.log(selector.filteredTodos);
+
             // allTodos'dan al
             setCurrentTodos(allSelector.allTodos?.slice(firstTodoIndex, lastTodoIndex) || []);
         }
@@ -90,7 +90,7 @@ const TodoList = () => {
     }, [currentPage, isPrevDisabled, isNextDisabled, totalPages]);
 
 
- 
+
     const handlePrevious = () => {
         if (!isPrevDisabled) {
             setCurrentPage(prev => prev - 1);
@@ -106,11 +106,11 @@ const TodoList = () => {
     const handleDelete = async (e, id) => {
         const response = await dispatch(delTodo(id));
         console.log(response.payload.data);
-        
-        
+
+
         const newTotalItems = (selector.filterStatus ? selector.filteredTodos.length : allSelector.dataCount) - 1;
         const newTotalPages = Math.ceil(newTotalItems / todosPerPage);
-        
+
         if (currentPage > newTotalPages && newTotalPages > 0) {
             setCurrentPage(newTotalPages);
         }
@@ -253,10 +253,9 @@ const TodoList = () => {
                                         {currentTodos.map((c) => {
                                             return (
                                                 <tr key={c.id}>
-                                                    <td className='px-3 py-2' data-label="Title">
-                                                        <Link to={`../todoitem/${c.id}`} style={{color:c.categories.color}} className="text-blue-600 dark:text-blue-200 hover:text-blue-800 dark:hover:text-blue-400">
-                                                            {c.categories.name}
-                                                        </Link>
+                                                    <td className='px-3 py-2' data-label="Category" style={{ color: c.categories.color }}>
+
+                                                        {c.categories.name}
                                                     </td>
                                                     <td className='px-3 py-2' data-label="Title">
                                                         <Link to={`../todoitem/${c.id}`} className="text-blue-600 dark:text-blue-200 hover:text-blue-800 dark:hover:text-blue-400">
@@ -322,9 +321,9 @@ const TodoList = () => {
 
                         <div className='flex justify-center mt-4'>
                             <div className='bg-gray-300 dark:bg-gray-600 text-gray-900 dark:text-gray-100 h-8 w-64 border-0 rounded-2xl flex justify-center'>
-                                <div 
-                                    ref={prevRef} 
-                                    className='w-1/3 h-full flex justify-center items-center cursor-pointer' 
+                                <div
+                                    ref={prevRef}
+                                    className='w-1/3 h-full flex justify-center items-center cursor-pointer'
                                     onClick={handlePrevious}
                                 >
                                     Prev
@@ -332,9 +331,9 @@ const TodoList = () => {
                                 <div className='w-1/3 h-full flex justify-center items-center'>
                                     {currentPage} / {totalPages || 1}
                                 </div>
-                                <div 
-                                    ref={nextRef} 
-                                    className='w-1/3 h-full flex justify-center items-center cursor-pointer' 
+                                <div
+                                    ref={nextRef}
+                                    className='w-1/3 h-full flex justify-center items-center cursor-pointer'
                                     onClick={handleNext}
                                 >
                                     Next

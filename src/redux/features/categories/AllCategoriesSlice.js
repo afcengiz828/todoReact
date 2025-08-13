@@ -23,13 +23,13 @@ export const delCategories = createAsyncThunk("delcategory", async (id) => {
 
 export const updateCategories = createAsyncThunk("updcategory", async (data) => {
 
-  console.log(data[0], typeof(data[0].name));
-  console.log(data[0], typeof(data[0].color));
+  console.log(data[0], typeof (data[0].name));
+  console.log(data[0], typeof (data[0].color));
   const response = await axios.put(`http://localhost:8000/api/categories/${data[1]}`, data[0]);
   return response.data;
 })
 
-export const todoCounts = createAsyncThunk("updcategory", async (data) => {
+export const todoCounts = createAsyncThunk("todocount", async (data) => {
 
   console.log(data);
   const response = await axios.put(`http://localhost:8000/api/categories/${data[1]}`, data[0]);
@@ -48,6 +48,13 @@ const AllCategoriesSlice = createSlice({
   reducers: {
     setId: (state, action) => {
       state.id = action.payload;
+    },
+    setError: (state, action) => {
+      console.log(action.payload)
+      state.error = action.payload;
+    },
+    clearError: (state) => {
+      state.error = null;
     }
   },
   extraReducers: builder => {
@@ -63,22 +70,22 @@ const AllCategoriesSlice = createSlice({
       })
       .addCase(getAllCategories.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload
+        state.error = action.payload.messages
 
       })
 
-            .addCase(addCategories.fulfilled, (state, action) => {
-              state.loading = false;
-              state.data.push(action.payload.category)
-              console.log(action.payload);
-            })
-            .addCase(addCategories.pending, (state, action) => {
-              state.loading = true;
-            })
-            .addCase(addCategories.rejected, (state, action) => {
-              state.loading = false;
-              state.error = action.payload
-            })
+      .addCase(addCategories.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data.push(action.payload.category)
+        console.log(action.payload);
+      })
+      .addCase(addCategories.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(addCategories.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.messages
+      })
 
       .addCase(delCategories.fulfilled, (state, action) => {
         console.log(action.payload.data.data)
@@ -90,25 +97,25 @@ const AllCategoriesSlice = createSlice({
       })
       .addCase(delCategories.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload
+        state.error = action.payload.messages
       })
 
-            .addCase(updateCategories.fulfilled, (state, action) => {
-              state.loading = false;
-              const index = state.data.findIndex(c => c.id == action.payload.category.id);
-              state.data[index] = action.payload.category;
-              state.id = null
-            })
-            .addCase(updateCategories.pending, (state, action) => {
-              state.loading = true;
-            })
-            .addCase(updateCategories.rejected, (state, action) => {
-              state.loading = false;
-              state.error = action.payload
-            })
+      .addCase(updateCategories.fulfilled, (state, action) => {
+        state.loading = false;
+        const index = state.data.findIndex(c => c.id == action.payload.category.id);
+        state.data[index] = action.payload.category;
+        state.id = null
+      })
+      .addCase(updateCategories.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(updateCategories.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.messages
+      })
   }
 });
 
-export const { setId } = AllCategoriesSlice.actions;
+export const { setId, setError, clearError } = AllCategoriesSlice.actions;
 
 export default AllCategoriesSlice.reducer;
