@@ -3,36 +3,81 @@ import axios from "axios";
 
 
 
-export const getAllCategories = createAsyncThunk("getcategory", async () => {
+export const getAllCategories = createAsyncThunk("getcategory", async (_, { getState }) => {
+  const state = getState();
+  const token = state?.auth?.token || localStorage.getItem('token');
 
-  const response = await axios.get('http://localhost:8000/api/categories');
+  const response = await axios.get('http://localhost:8000/api/categories', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    }
+  });
   return response.data;
 })
 
-export const addCategories = createAsyncThunk("addcategory", async (newCategory) => {
+export const addCategories = createAsyncThunk("addcategory", async (newCategory, { getState }) => {
+  const state = getState();
+  const token = state?.auth?.token || localStorage.getItem('token');
 
-  const response = await axios.post('http://localhost:8000/api/categories', newCategory);
+  const response = await axios.post(
+    'http://localhost:8000/api/categories',
+    newCategory,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  );
   return response.data;
 })
 
-export const delCategories = createAsyncThunk("delcategory", async (id) => {
+export const delCategories = createAsyncThunk("delcategory", async (id, { getState }) => {
+  const state = getState();
+  const token = state?.auth?.token || localStorage.getItem('token');
 
-  const response = await axios.delete(`http://localhost:8000/api/categories/${id}`);
+  const response = await axios.delete(`http://localhost:8000/api/categories/${id}` , {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    }
+  });
   return response;
 })
 
-export const updateCategories = createAsyncThunk("updcategory", async (data) => {
+export const updateCategories = createAsyncThunk("updcategory", async (data, { getState }) => {
+  const state = getState();
+  const token = state?.auth?.token || localStorage.getItem('token');
 
   console.log(data[0], typeof (data[0].name));
   console.log(data[0], typeof (data[0].color));
-  const response = await axios.put(`http://localhost:8000/api/categories/${data[1]}`, data[0]);
+  const response = await axios.put(
+    `http://localhost:8000/api/categories/${data[1]}`,
+    data[0],
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      }
+    }
+  );
   return response.data;
 })
 
-export const todoCounts = createAsyncThunk("todocount", async (data) => {
+export const todoCounts = createAsyncThunk("todocount", async (data, { getState }) => {
+  const state = getState();
+  const token = state?.auth?.token || localStorage.getItem('token');
 
   console.log(data);
-  const response = await axios.put(`http://localhost:8000/api/categories/${data[1]}`, data[0]);
+  const response = await axios.put(
+    `http://localhost:8000/api/categories/${data[1]}`,
+    data[0],
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      }
+    }
+  );
   return response.data;
 })
 

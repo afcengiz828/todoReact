@@ -58,6 +58,7 @@ const TodoForm = ({ }) => {
     const [todos, setTodos] = useState([]);
     const [addStatus, setAddStatus] = useState(false);
     const [updateStatus, setUpdateStatus] = useState(false);
+    const [color, setColor] = useState("#000000");
 
     useEffect(() => {
         if (selector.filteredTodos.length > 0) {
@@ -187,7 +188,11 @@ const TodoForm = ({ }) => {
 
                     <div className='flex justify-center'>
                         <label className='mr-4'>Select Category:</label>
-                        <select {...register("categories")} className='text-gray-900 dark:text-gray-200 bg-gray-100 dark:bg-gray-600'>
+                        <select {...register("categories")}  style={{backgroundColor : color}} className='w-32 text-gray-900 dark:text-gray-200 bg-gray-100 dark:bg-gray-600' onChange={(e) => {
+                                const catName = e.target.value;
+                                const category = categorySelector.data.filter(c => c.name == catName);
+                                setColor(category.color)
+                        }}>
                             <option value="">Category</option>
                             {
                                 categorySelector.data.map((c) => {
@@ -196,7 +201,11 @@ const TodoForm = ({ }) => {
                                     )
                                 })
                              }
-                        </select> <br />
+                        </select>
+                        <div style={{backgroundColor : color}}>
+
+                        </div>
+                         <br />
                         <div className='text-red-600 font-bold'>
                             {errors.category && errors.category.message}
                         </div>

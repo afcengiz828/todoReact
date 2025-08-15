@@ -37,7 +37,7 @@ const Dashboard = () => {
 
           <Header />
 
-          <section class=" py-6">
+          <section className=" py-6">
             <div className="mx-auto overflow-x-auto rounded-lg shadow-md max-w-xl">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead >

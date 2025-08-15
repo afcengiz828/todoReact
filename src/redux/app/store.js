@@ -5,10 +5,12 @@ import  filteredReducer  from '../features/todo/FilteredSlice.js';
 import  allTodoReducer  from '../features/todo/AllTodoSlice.js';
 import  allCategoriesReducer  from '../features/categories/AllCategoriesSlice.js';
 import  ThemeReducer  from '../features/todo/ThemeSlice.js';
+import authReducer from '../features/AuthSlice.js';
 
 
 export const store = configureStore({
     reducer: {
+        auth: authReducer,
         todo: todoReducer,
         categories: allCategoriesReducer,
         filter: filteredReducer,

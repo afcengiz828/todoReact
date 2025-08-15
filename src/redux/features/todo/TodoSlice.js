@@ -17,37 +17,162 @@ const initialState = {
 
 export const getAllTodo = createAsyncThunk("gettodo", async (url) => {
 
-    const response = await axios.get('http://localhost:8000/api/todos');
-    return response.data;
+    try {
+        // localStorage'dan token'ı al
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            return rejectWithValue('Token bulunamadı, lütfen giriş yapın');
+        }
+
+        const response = await axios.get('http://localhost:8000/api/todos', {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        return response.data;
+    } catch (error) {
+        // 401 hatası (Unauthorized)
+        if (error.response?.status === 401) {
+            // Token geçersiz, localStorage'ı temizle
+            localStorage.removeItem('token');
+            return rejectWithValue('Oturum süreniz dolmuş, lütfen tekrar giriş yapın');
+        }
+
+        return rejectWithValue(
+            error.response?.data?.message || 'Todos alınırken hata oluştu'
+        );
+    }
 })
 
 export const addTodo = createAsyncThunk("addtodo", async (newTodo) => {
-
     console.log("addTodo içindeki json verisi");
     console.log(newTodo);
-    const response = await axios.post("http://localhost:8000/api/todos", newTodo);
-    console.log(response.data);
-    return response.data;
+    try {
+
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            return rejectWithValue('Token bulunamadı, lütfen giriş yapın');
+        }
+
+        const response = await axios.post("http://localhost:8000/api/todos", newTodo, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        console.log(response.data);
+        return response.data;
+
+    } catch (error) {
+        // 401 hatası (Unauthorized)
+        if (error.response?.status === 401) {
+            // Token geçersiz, localStorage'ı temizle
+            localStorage.removeItem('token');
+            return rejectWithValue('Oturum süreniz dolmuş, lütfen tekrar giriş yapın');
+        }
+
+        return rejectWithValue(
+            error.response?.data?.message || 'Todos alınırken hata oluştu'
+        );
+    }
 })
 
 export const delTodo = createAsyncThunk("deltodo", async (id) => {
-    const response = await axios.delete(`http://localhost:8000/api/todos/${id}`);
 
-    return response;
+    try {
+
+        // localStorage'dan token'ı al
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            return rejectWithValue('Token bulunamadı, lütfen giriş yapın');
+        }
+
+        const response = await axios.delete(`http://localhost:8000/api/todos/${id}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        return response;
+    } catch (error) {
+        // 401 hatası (Unauthorized)
+        if (error.response?.status === 401) {
+            // Token geçersiz, localStorage'ı temizle
+            localStorage.removeItem('token');
+            return rejectWithValue('Oturum süreniz dolmuş, lütfen tekrar giriş yapın');
+        }
+
+        return rejectWithValue(
+            error.response?.data?.message || 'Todos alınırken hata oluştu'
+        );
+    }
+
 })
 
 export const updateTodo = createAsyncThunk("puttodo", async (newTodo) => {
-    const response = await axios.put(`http://localhost:8000/api/todos/${newTodo.id}`, newTodo);
 
-    return response;
+    try {
+        // localStorage'dan token'ı al
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            return rejectWithValue('Token bulunamadı, lütfen giriş yapın');
+        }
+        const response = await axios.put(`http://localhost:8000/api/todos/${newTodo.id}`, newTodo);
+
+        return response;
+    } catch (error) {
+        // 401 hatası (Unauthorized)
+        if (error.response?.status === 401) {
+            // Token geçersiz, localStorage'ı temizle
+            localStorage.removeItem('token');
+            return rejectWithValue('Oturum süreniz dolmuş, lütfen tekrar giriş yapın');
+        }
+
+        return rejectWithValue(
+            error.response?.data?.message || 'Todos alınırken hata oluştu'
+        );
+    }
 })
 
 export const updateTodoStatus = createAsyncThunk("updatetodostatus", async (data) => {
+
     console.log(data);
-    const response = await axios.patch(`http://localhost:8000/api/todos/${data.idObj.id}`, data.dataObj);
-    console.log("Response");
-    console.log(response);
-    return response;
+    try {
+        // localStorage'dan token'ı al
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            return rejectWithValue('Token bulunamadı, lütfen giriş yapın');
+        }
+
+        const response = await axios.patch(`http://localhost:8000/api/todos/${data.idObj.id}`, data.dataObj, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        console.log(response);
+        return response;
+    } catch (error) {
+        // 401 hatası (Unauthorized)
+        if (error.response?.status === 401) {
+            // Token geçersiz, localStorage'ı temizle
+            localStorage.removeItem('token');
+            return rejectWithValue('Oturum süreniz dolmuş, lütfen tekrar giriş yapın');
+        }
+
+        return rejectWithValue(
+            error.response?.data?.message || 'Todos alınırken hata oluştu'
+        );
+    }
 })
 
 

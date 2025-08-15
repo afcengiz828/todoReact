@@ -19,20 +19,20 @@ const Header = () => {
             {/* HEADER CONTAINER */}
             <div className="container mx-auto flex items-center justify-between px-2 space-x-8">
                 {/* LOGO */}
-                <Link to={'../dashboard'} >
+                <Link to={'/dashboard'} >
                     <a href='#' className='font-poppins text-2xl sm:text-4xl font-bold text-transparent bg-gradient-to-r bg-clip-text from-amber-400 to-red-500'>TODO</a>
                 </Link>
 
                 {/* NAVIGATION BAR */}
                 <nav className='flex justify-between flex-1 '>
                     <div className="flex items-center text-lg space-x-4">
-                        <Link to={'../todolist'} >
+                        <Link to={'/todos'} >
                             <a href="#" className='hover:text-amber-400 transition duration-300 text-xl sm:text-2xl'>List</a>
                         </Link>
-                        <Link to={'../tododetail'} >
+                        <Link to={'/addtodos'} >
                             <a href="#" className='hover:text-amber-400 transition duration-300 text-xl sm:text-2xl'>Add</a>
                         </Link>
-                        <Link to={'../categories'} >
+                        <Link to={'/categories'} >
                             <a href="#" className='hover:text-amber-400 transition duration-300 text-xl sm:text-2xl'>Cat</a>
                         </Link>
 

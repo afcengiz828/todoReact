@@ -1,31 +1,93 @@
-import React from 'react'
-import { Route, Router, Routes, useLocation } from 'react-router-dom'
-import Dashboard from './pages/dashboard'
-import TodoDetail from './pages/TodoDetail'
-import { TodoListPage } from './pages/TodoListPage'
-import TodoItem from './components/TodoItem'
-import { AnimatePresence } from 'framer-motion'
-import Categories from './pages/Categories'
+// src/AppRouter.jsx
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
+// Components
+import ProtectedRoute from './components/ProtectedRoute';
+
+// Pages
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
+import TodoDetail from './pages/TodoDetail';
+import {TodoListPage} from './pages/TodoListPage';
+import Categories from './pages/Categories';
+import { AnimatePresence } from 'framer-motion';
 
 const AppRouter = () => {
-
-    const location = useLocation();
+    const { isAuthenticated } = useSelector((state) => state.auth);
 
     return (
-        <>
-            <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait">
+            
+            <Routes>
+                {/* Public Routes */}
+                <Route
+                    path="/login"
+                    element={
+                        isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login />
+                    }
+                />
 
-                <Routes location={location} key={location.pathname}>
-                    <Route path='/' element={<Dashboard />} />
-                    <Route path='/dashboard' element={<Dashboard />} />
-                    <Route path='/categories' element={<Categories />} />
-                    <Route path="/tododetail/:idTodo?" element={<TodoDetail />} />
-                    <Route path='/todolist' element={<TodoListPage />} />
-                    <Route path='/todoitem/:c' element={<TodoItem />} />
-                </Routes>
-            </AnimatePresence>
-        </>
-    )
-}
+                {/* Protected Routes */}
+                <Route
+                    path="/dashboard"
+                    element={
+                        <ProtectedRoute>
+                            <Dashboard />
+                        </ProtectedRoute>
+                    }
+                />
 
-export default AppRouter
+                <Route
+                    path="/todos"
+                    element={
+                        <ProtectedRoute>
+                            <TodoListPage />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/addtodos"
+                    element={
+                        <ProtectedRoute>
+                            <TodoDetail />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/todos/:id"
+                    element={
+                        <ProtectedRoute>
+                            <TodoDetail />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/categories"
+                    element={
+                        <ProtectedRoute>
+                            <Categories />
+                        </ProtectedRoute>
+                    }
+                />
+
+                {/* Default redirect */}
+                <Route
+                    path="/"
+                    element={
+                        <Navigate to={isAuthenticated ? "/dashboard" : "/login"} replace />
+                    }
+                />
+
+                {/* 404 - Not Found */}
+                <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+        </AnimatePresence>
+    );
+};
+
+export default AppRouter;
