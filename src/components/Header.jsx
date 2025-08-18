@@ -2,14 +2,19 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom'
 import { setDark } from '../redux/features/todo/ThemeSlice';
-
+import { logoutUser } from '../redux/features/AuthSlice';
 const Header = () => {
 
 
     const dispatch = useDispatch();
-
+    var selector = useSelector(state => state.auth);
+    //console.log(selector.isAuthenticated)
     const toggleTheme = (e) => {
         document.documentElement.classList.toggle("dark");
+    }
+
+    const handleLogout = () => {
+        dispatch(logoutUser());
     }
 
     return (
@@ -37,15 +42,23 @@ const Header = () => {
                         </Link>
 
                     </div>
+                    <div className='flex flex-col md:flex-row justify-center'>
 
-                    <div>
-                        <button className='cursor-pointer rounded-full bg-white' onClick={() => dispatch(setDark())} aria-label="Toggle dark mode">
-                            <img
-                                src="/dark-theme-svgrepo-com.svg"
-                                alt="Koyu Tema Ikonu"
-                                className="w-10 h-10"
-                            />
-                        </button>
+                        <div className='bg-amber-400 text-white dark:text-gray-900 p-2 border-0 rounded-2xl cursor-pointer mr-4 ' >
+                            <button className="cursor-pointer" onClick={handleLogout}>
+                                LOGOUT
+                            </button>
+                        </div >
+
+                        <div>
+                            <button className='ml-4 cursor-pointer rounded-full bg-white' onClick={() => dispatch(setDark())} aria-label="Toggle dark mode">
+                                <img
+                                    src="/dark-theme-svgrepo-com.svg"
+                                    alt="Koyu Tema Ikonu"
+                                    className="w-10 h-10"
+                                />
+                            </button>
+                        </div>
                     </div>
                 </nav>
             </div>

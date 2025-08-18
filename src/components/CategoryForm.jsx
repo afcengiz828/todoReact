@@ -87,17 +87,9 @@ const CategoryForm = () => {
                     {selector.error}
                 </div>
             )}
-            
-                    <div className='opacity-0'>
-                       { setTimeout(() => {
-                            dispatch(setError(""));
-                            setErr(false);
-                            setValue("name", "");
-                            setValue("color", "#000000");
 
-                        }, 3000)}
-                    </div>
-                
+            
+
 
             <form onSubmit={handleSubmit(onSubmit)} className='m-2 p-4 border-0 rounded-2xl w-64 md:w-96 bg-gray-300 dark:bg-gray-600 text-gray-900 dark:text-gray-200'>
                 <div class="flex justify-center p-2">

@@ -258,9 +258,7 @@ const TodoList = () => {
                                                         {c.categories.name}
                                                     </td>
                                                     <td className='px-3 py-2' data-label="Title">
-                                                        <Link to={`../todoitem/${c.id}`} className="text-blue-600 dark:text-blue-200 hover:text-blue-800 dark:hover:text-blue-400">
-                                                            {c.title}
-                                                        </Link>
+                                                        {c.title}
                                                     </td>
                                                     <td className='px-3 py-2' data-label="Description">
                                                         {c.description}
@@ -305,7 +303,7 @@ const TodoList = () => {
                                                         </button>
                                                     </td>
                                                     <td className='px-3 py-2' data-label="Edit">
-                                                        <Link to={`../tododetail/${c.id}`}>
+                                                        <Link to={`../addtodos/${c.id}`}>
                                                             <div className='bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs inline-block'>
                                                                 Edit
                                                             </div>

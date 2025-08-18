@@ -58,13 +58,24 @@ const AppRouter = () => {
                 />
 
                 <Route
-                    path="/todos/:id"
+                    path="/addtodos/:id"
                     element={
                         <ProtectedRoute>
                             <TodoDetail />
                         </ProtectedRoute>
                     }
                 />
+
+                
+                <Route
+                    path="/tododetail/:id"
+                    element={
+                        <ProtectedRoute>
+                            <TodoDetail />
+                        </ProtectedRoute>
+                    }
+                />
+
 
                 <Route
                     path="/categories"

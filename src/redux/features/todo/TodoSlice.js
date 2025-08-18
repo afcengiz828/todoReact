@@ -124,7 +124,13 @@ export const updateTodo = createAsyncThunk("puttodo", async (newTodo) => {
         if (!token) {
             return rejectWithValue('Token bulunamadı, lütfen giriş yapın');
         }
-        const response = await axios.put(`http://localhost:8000/api/todos/${newTodo.id}`, newTodo);
+        const response = await axios.put(`http://localhost:8000/api/todos/${newTodo.id}`, newTodo, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        console.log(response)
 
         return response;
     } catch (error) {

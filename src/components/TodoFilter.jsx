@@ -1,6 +1,5 @@
 import React, { use, useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import TodoItem from './TodoItem';
 import { setFiltered, setFilteredStatus, updateFiltered } from '../redux/features/todo/FilteredSlice';
 
 const TodoFilter = () => {

@@ -1,6 +1,6 @@
 import { createSlice, current } from '@reduxjs/toolkit'
 import React, { act } from 'react'
-import { delTodo, updateTodoStatus } from './TodoSlice';
+import { addTodo, delTodo, updateTodoStatus } from './TodoSlice';
 
 const initialState = {
     filteredTodos: [],
@@ -58,6 +58,10 @@ export const FilteredSlice = createSlice({
                 if(index !== -1){
                     state.allTodos[index].status = updatedTodo.status;
                 }
+            })
+            .addCase(addTodo.fulfilled, (state, action) => {
+                console.log(action.payload)
+                state.filteredTodos.push(action.payload.data);
             })
         },
     });

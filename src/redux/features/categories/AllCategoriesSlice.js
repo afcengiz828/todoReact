@@ -95,7 +95,6 @@ const AllCategoriesSlice = createSlice({
       state.id = action.payload;
     },
     setError: (state, action) => {
-      console.log(action.payload)
       state.error = action.payload;
     },
     clearError: (state) => {
@@ -121,7 +120,7 @@ const AllCategoriesSlice = createSlice({
 
       .addCase(addCategories.fulfilled, (state, action) => {
         state.loading = false;
-        state.data.push(action.payload.category)
+        state.data.push(action.payload[2])
         console.log(action.payload);
       })
       .addCase(addCategories.pending, (state, action) => {
@@ -129,13 +128,15 @@ const AllCategoriesSlice = createSlice({
       })
       .addCase(addCategories.rejected, (state, action) => {
         state.loading = false;
+        console.log(action.payload)
         state.error = action.payload.messages
       })
 
       .addCase(delCategories.fulfilled, (state, action) => {
-        console.log(action.payload.data.data)
+        console.log(action.payload)
         state.loading = false;
         state.data = state.data.filter(c => c.id != action.payload.data.data.id);
+        console.log(state.data)
       })
       .addCase(delCategories.pending, (state, action) => {
         state.loading = true;

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import TodoList from '../components/TodoList'
-import TodoItem from '../components/TodoItem'
 import TodoFilter from '../components/TodoFilter'
 import Header from '../components/Header'
 import { motion } from "framer-motion";

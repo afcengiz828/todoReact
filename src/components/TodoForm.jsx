@@ -54,11 +54,13 @@ const TodoForm = ({ }) => {
     var selector = useSelector(state => state.filter);
     var categorySelector = useSelector(state => state.categories);
 
-    const { idTodo } = useParams();
+    const { id } = useParams();
     const [todos, setTodos] = useState([]);
     const [addStatus, setAddStatus] = useState(false);
     const [updateStatus, setUpdateStatus] = useState(false);
-    const [color, setColor] = useState("#000000");
+    const [color, setColor] = useState("#ffffff");
+
+    
 
     useEffect(() => {
         if (selector.filteredTodos.length > 0) {
@@ -74,11 +76,15 @@ const TodoForm = ({ }) => {
     }, [selector.filteredTodos])
 
     useEffect(() => {
-        if (idTodo) {
-            setValue("id", idTodo);
-            handelChangeUpdate(idTodo);
+        if (id) {
+            setValue("id", id);
+            handelChangeUpdate(id);
         }
-    }, [idTodo, todos])
+    }, [id, todos]);
+
+    useEffect(() => {
+
+    }, [color]);
 
 
 
@@ -92,11 +98,13 @@ const TodoForm = ({ }) => {
         if (todos) {
             todos.forEach(todo => {
                 if (todo.id == Number(id) && id.trim()) {
+                    console.log(todo)
                     setValue("title", todo.title);
                     setValue("description", todo.description ? todo.description : "");
                     setValue("status", todo.status);
                     setValue("priority", todo.priority);
                     setValue("due_date", todo.due_date ? todo.due_date.split("T")[0] : "");
+                    setValue("categories", todo.categories.name.toLowerCase())
 
                 }
             });
@@ -184,16 +192,16 @@ const TodoForm = ({ }) => {
         <div class="w-full flex-col" >
             <div className='flex justify-center'>
 
-                <form onSubmit={handleSubmit(onSubmit)} className='mt-2 p-4 rounded-2xl  bg-gray-100 dark:bg-gray-600 w-lg text-gray-900 dark:text-gray-200'>
+                <form onSubmit={handleSubmit(onSubmit)} className='mt-2 p-4 rounded-2xl  bg-gray-200 dark:bg-gray-600 w-lg text-gray-900 dark:text-gray-200'>
 
                     <div className='flex justify-center'>
                         <label className='mr-4'>Select Category:</label>
-                        <select {...register("categories")}  style={{backgroundColor : color}} className='w-32 text-gray-900 dark:text-gray-200 bg-gray-100 dark:bg-gray-600' onChange={(e) => {
+                        <select {...register("categories")} className='w-32 text-gray-900 dark:text-gray-200 bg-gray-100 dark:bg-gray-600 border-0 rounded-2xl text-center' onChange={(e) => {
                                 const catName = e.target.value;
                                 const category = categorySelector.data.filter(c => c.name == catName);
                                 setColor(category.color)
                         }}>
-                            <option value="">Category</option>
+                            <option value="" className='bg-gray-100 dark:bg-gray-600'>Category</option>
                             {
                                 categorySelector.data.map((c) => {
                                     return (
@@ -224,7 +232,7 @@ const TodoForm = ({ }) => {
 
                     </div>
                     <div className='flex justify-around'>
-                        <select {...register("status")} className='text-gray-900 dark:text-gray-200 bg-gray-100 dark:bg-gray-600'>
+                        <select {...register("status")} className='text-gray-900 dark:text-gray-200 bg-gray-100 dark:bg-gray-600 border-0 rounded-2xl text-center'>
                             <option value="status">Status</option>
                             <option value="pending">Pending</option>
                             <option value="in_progress">In Progress</option>
@@ -235,7 +243,7 @@ const TodoForm = ({ }) => {
                             {errors.status && errors.status.message}
                         </div>
 
-                        <select {...register("priority")} className='text-gray-900 dark:text-gray-200 bg-gray-100 dark:bg-gray-600'>
+                        <select {...register("priority")} className='text-gray-900 dark:text-gray-200 bg-gray-100 dark:bg-gray-600 border-0 rounded-2xl text-center'>
                             <option value="priority">Priority</option>
                             <option value="low">Low</option>
                             <option value="medium">Medium</option>
@@ -255,7 +263,7 @@ const TodoForm = ({ }) => {
 
                     </div>
 
-                    <div className='m-2'>
+                    <div className='m-2 opacity-0'>
                         <input {...register("id")} onChange={(e) => {
                             handelChangeUpdate(e.target.value);
                         }} type="text" placeholder='Id to update, not required.' className='bg-transparent border-b border-red focus:outline-none w-full' /> <br />
