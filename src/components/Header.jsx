@@ -11,6 +11,7 @@ const Header = () => {
     const selector = useSelector(state => state.auth);
     const darkSelector = useSelector(state => state.dark);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const userName = localStorage.getItem("userName");  
 
     const [userModal, setUserModal] = useState({
         isOpen: false,
@@ -21,8 +22,6 @@ const Header = () => {
     const openUserModal = () => {
         setUserModal({
             isOpen: true,
-            todoId: null,
-            todoText: ""
         });
     };
 
@@ -32,6 +31,7 @@ const Header = () => {
             todoId: null,
             todoText: ""
         });
+
     };
 
     const handleLogout = () => {
@@ -49,7 +49,9 @@ const Header = () => {
     ];
 
     return (
-        <header className='sticky top-0 z-40 backdrop-blur-md bg-white/80 dark:bg-gray-900/80 border-b border-gray-200/20 dark:border-gray-700/20 shadow-lg'>
+        <header className={` bg-white/80 dark:bg-gray-900/80 border-b border-gray-200/20 dark:border-gray-700/20 shadow-lg transition-all duration-300 ${
+            userModal.isOpen ? 'z-30' : 'z-40'
+        }`}>
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16 lg:h-20">
                     
@@ -103,7 +105,7 @@ const Header = () => {
                         >
                             <User className="h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
                             <span className="hidden lg:block font-medium text-sm">
-                                {selector.user?.name?.split(' ')[0] || 'Profil'}
+                                {userName.split(' ')[0] || 'Profil'}
                             </span>
                         </button>
 
@@ -160,7 +162,6 @@ const Header = () => {
             <ModalUser
                 isOpen={userModal.isOpen}
                 onClose={closeUserModal}
-                itemName={userModal.todoText}
                 title="Kullanıcı Bilgileri"
             />
 

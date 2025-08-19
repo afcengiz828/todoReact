@@ -1,11 +1,13 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios';
 import React from 'react'
+import { loginUser } from '../AuthSlice';
 
 const initialState = {
     status: "",
     messages: "",
     data: [],
+    loginUser: {},
     loading: true,
     error: null
 
@@ -52,7 +54,7 @@ export const updateUsers = createAsyncThunk("updusers", async (user) => {
         return rejectWithValue('Token bulunamadı, lütfen giriş yapın');
     }
 
-    const response = await axios.put(`http://localhost:8000/api/user/${user[0]}`, user[1] , {
+    const response = await axios.put(`http://localhost:8000/api/user/${user[0]}`, user[1], {
         headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -73,24 +75,36 @@ export const UserSlice = createSlice({
                 state.data = action.payload
             })
             .addCase(getUsers.pending, (state, action) => {
-                
+
             })
             .addCase(getUsers.rejected, (state, action) => {
-                
+
             })
             .addCase(addUsers.fulfilled, (state, action) => {
                 console.log(action.payload);
-                state.data.push(action.payload.data.user);
+                if(state.data.length > 0){
+                    state.data.push(action.payload.data.user);
+                }else{
+                    state.data[0] = action.payload.user
+                }
+                console.log("user eklendi");
+                console.log(state.data)
             })
             .addCase(addUsers.pending, (state, action) => {
-                
+
             })
             .addCase(addUsers.rejected, (state, action) => {
-                
+
             })
             .addCase(delUsers.fulfilled, (state, action) => {
                 console.log(action.payload);
                 state.data.remove(u => u.id == action.payload.id);
+            })
+            .addCase(loginUser.fulfilled, (state, action) => {
+                console.log(action.payload);
+                state.loginUser = action.payload.user;
+                state.error = null;
+                console.log(state.loginUser)
             })
     }
 

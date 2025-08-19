@@ -7,13 +7,15 @@ import CategoryForm from '../components/CategoryForm'
 import CategoryList from '../components/CategoryList'
 
 const Categories = () => {
-  const selector = useSelector(state => state.dark)
+  const selector = useSelector(state => state.dark);
 
   const pageTransition = {
     initial: { opacity: 0, x: -100 },
     animate: { opacity: 1, x: 0 },
     exit: { opacity: 0, x: 100 },
   }
+
+ 
 
   useEffect(() => {
     if (selector.dark) {
@@ -24,7 +26,17 @@ const Categories = () => {
   }, [selector.dark])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-purple-900/20">
+    <motion.div
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      variants={pageTransition}
+      transition={{ duration: 0.5 }}
+      className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-blue-900 dark:to-indigo-900"
+    >
+      {/* Header */}
+        <Header />
+    <div className={`min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-purple-900/20`}>
       <motion.div 
         variants={pageTransition}
         initial="initial"
@@ -32,10 +44,8 @@ const Categories = () => {
         exit="exit"
         transition={{ duration: 0.5 }}
       >
-        {/* Header */}
-        <Header />
         
-        <div className="container mx-auto px-4 py-8 max-w-6xl">
+        <div className={` container mx-auto px-4 py-8 max-w-6xl`}>
           {/* Page Title */}
           <div className="flex items-center gap-4 mb-8">
             <div className="p-3 bg-gradient-to-br from-purple-600 to-blue-600 rounded-2xl shadow-lg">
@@ -63,6 +73,8 @@ const Categories = () => {
         </div>
       </motion.div>
     </div>
+      </motion.div>
+
   )
 }
 

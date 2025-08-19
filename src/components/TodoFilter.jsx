@@ -288,17 +288,17 @@ const TodoFilter = () => {
                             }
                         </select>
                     </div>
-                </div>
 
                 {/* Clear Filters Button */}
                 <div className='flex items-center'>
                     <button
                         onClick={clearFilter}
                         className='px-4 py-2.5 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 text-sm'
-                    >
+                        >
                         🗑️ Temizle
                     </button>
                 </div>
+                        </div>
             </div>
         </div>
     )

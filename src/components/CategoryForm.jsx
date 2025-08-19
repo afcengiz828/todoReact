@@ -15,7 +15,7 @@ const CategoryForm = () => {
     const validationSchema = Yup.object({
         name: Yup.string()
             .min(5, "Kategori adı en az 5 karakter olmalıdır")
-            .max(200, "Kategori adı en fazla 200 karakter olmalıdır")
+            .max(18, "Kategori adı en fazla 18 karakter olmalıdır")
             .required("Kategori adı zorunludur"),
         color: Yup.string().required("Renk seçimi zorunludur")
     });

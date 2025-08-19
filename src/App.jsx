@@ -9,6 +9,7 @@ import { setFiltered, updateFiltered } from './redux/features/todo/FilteredSlice
 import { setAllTodos } from './redux/features/todo/AllTodoSlice'
 import { getAllCategories } from './redux/features/categories/AllCategoriesSlice'
 import { getUsers } from './redux/features/user/UserSlice'
+import { setAuthUser } from './redux/features/AuthSlice'
 
 function App() {
   const dispatch = useDispatch();
@@ -66,13 +67,13 @@ function App() {
   useEffect(() => {
     if (selectorTodo.data) {
       dispatch(setFiltered(selectorTodo.data));
-      dispatch(setAllTodos(selectorTodo.data));
+      dispatch(setAllTodos(selectorTodo.data)); 
 
     }
 
   }, [selectorTodo.data]);
 
-  
+
   return (
     <>
 
