@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice, current } from '@reduxjs/toolkit'
 import axios from 'axios';
 import React from 'react'
 import { delFiltered } from './FilteredSlice';
@@ -285,9 +285,13 @@ export const TodoSlice = createSlice({
             })
             .addCase(updateCategories.fulfilled, (state, action) => {
                 state.loading = false;
-                const index = state.data.findIndex(c => c.id == action.payload.category.id);
-                console.log(action.payload.category)
-                state.data[index].categories = action.payload.category;
+                const index = state.data.map(c => {
+                    if(c.categories_id == action.payload.data.id){
+                        c.categories_id = action.payload.data.id;
+                        c.categories.name = action.payload.data.name;
+                        c.categories.color = action.payload.data.color;     
+                    }
+                });
             })
 
     }

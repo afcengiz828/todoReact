@@ -171,11 +171,7 @@ const TodoFilter = () => {
         if (data.length == 0) {
             dispatch(setFiltered(data))
         }
-
-
         data = applyFilters(data, currentPriority, currentStatus, currentCategory);
-
-
 
         data = handleSort(sortValue, data);
 
@@ -205,78 +201,107 @@ const TodoFilter = () => {
 
 
     return (
-        <div className='flex flex-col md:flex-row justify-around md:justify-between p2 md:p-0 '>
-            <div id='search' className='mx-2 my-1 text-gray-900 dark:text-gray-200 md:w-44 flex flex-col md:flex-row justify-center md:justify-between'>
-                <span className="text-center">
-                    Arama:
-                </span>
-                <input type="text" placeholder="Search.." className='mx-2 w-32 bg-transparent border-b border-red focus:outline-none' value={searchValue} onChange={(e) => {
-                    setSearchValue(e.target.value);
-                }}></input>
-            </div>
+        <div className='bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6 mb-6 backdrop-blur-sm'>
+            <div className='flex flex-col lg:flex-row gap-6 items-center justify-between'>
+                
+                {/* Search Section */}
+                <div className='flex flex-col sm:flex-row items-center gap-3 min-w-0 flex-1'>
+                    <label className='text-sm font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap'>
+                        🔍 Arama:
+                    </label>
+                    <div className='relative flex-1 max-w-xs'>
+                        <input 
+                            type="text" 
+                            placeholder="Ara..." 
+                            className='w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-600' 
+                            value={searchValue} 
+                            onChange={(e) => setSearchValue(e.target.value)}
+                        />
+                    </div>
+                </div>
 
-            <div id='siralama' className='mx-2 my-1 pt-2 md:pt-0 text-gray-900 dark:text-gray-200 flex flex-col items-center md:flex-row justify-between'>
-                <span className="text-center">
-                    Sıralama:
-                </span>
-                <select className='mb-2 md:mb-0 border rounded-2xl text-center no-arrow mx-2 w-32 dark:bg-gray-900' value={sortValue} onChange={(e) => {
+                {/* Sorting Section */}
+                <div className='flex flex-col sm:flex-row items-center gap-3 min-w-0 flex-1'>
+                    <label className='text-sm font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap'>
+                        📊 Sıralama:
+                    </label>
+                    <div className='flex gap-2 flex-wrap'>
+                        <select 
+                            className='px-3 py-2.5 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-700 dark:to-gray-600 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:shadow-md cursor-pointer min-w-[120px]' 
+                            value={sortValue} 
+                            onChange={(e) => setSortValue(e.target.value)}
+                        >
+                            <option value="id">🆔 Id'ye Göre</option>
+                            <option value="title">📝 Title'a Göre</option>
+                            <option value="date">📅 Due Date'e Göre</option>
+                        </select>
+                        <select 
+                            className='px-3 py-2.5 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-700 dark:to-gray-600 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:shadow-md cursor-pointer min-w-[80px]' 
+                            value={sortValueDirection} 
+                            onChange={(e) => setSortValueDirection(e.target.value)}
+                        >
+                            <option value="asc">⬆️ Artan</option>
+                            <option value="desc">⬇️ Azalan</option>
+                        </select>
+                    </div>
+                </div>
 
-                    setSortValue(e.target.value);
+                {/* Filtering Section */}
+                <div className='flex flex-col sm:flex-row items-center gap-3 min-w-0 flex-1'>
+                    <label className='text-sm font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap'>
+                        🎯 Filtreleme:
+                    </label>
+                    <div className='flex gap-2 flex-wrap'>
+                        <select 
+                            className='px-3 py-2.5 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-gray-700 dark:to-gray-600 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 hover:shadow-md cursor-pointer min-w-[90px]' 
+                            value={currentPriority} 
+                            onChange={(e) => setCurrentPriority(e.target.value)}
+                        >
+                            <option value="none">Priority</option>
+                            <option value="low">🟢 Low</option>
+                            <option value="medium">🟡 Medium</option>
+                            <option value="high">🔴 High</option>
+                        </select>
+                        <select 
+                            className='px-3 py-2.5 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-gray-700 dark:to-gray-600 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 hover:shadow-md cursor-pointer min-w-[100px]' 
+                            value={currentStatus} 
+                            onChange={(e) => setCurrentStatus(e.target.value)}
+                        >
+                            <option value="none">Status</option>
+                            <option value="pending">⏳ Pending</option>
+                            <option value="in_progress">🚀 In progress</option>
+                            <option value="cancelled">❌ Cancelled</option>
+                            <option value="completed">✅ Completed</option>
+                        </select>
+                        <select 
+                            className='px-3 py-2.5 bg-gradient-to-br from-orange-50 to-amber-50 dark:from-gray-700 dark:to-gray-600 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 hover:shadow-md cursor-pointer min-w-[90px]' 
+                            value={currentCategory}
+                            onChange={(e) => setCurrentCategory(e.target.value)}
+                        >
+                            <option value="">🏷️ Category</option>
+                            {
+                                categorySelector.data.map((c, index) => {
+                                    return (
+                                        <option key={index} value={c.name.toLowerCase()}>{c.name}</option>
+                                    )
+                                })
+                            }
+                        </select>
+                    </div>
+                </div>
 
-                }}>
-                    <option value="id">Id'ye Göre</option>
-                    <option value="title">Title'a Göre</option>
-                    <option value="date">Due Date'e Göre</option>
-                </select>
-                <select className=' border rounded-2xl text-center no-arrow mx-2 w-16 dark:bg-gray-900' value={sortValueDirection} onChange={(e) => {
-                    setSortValueDirection(e.target.value);
-                }}>
-                    <option value="asc">Artan</option>
-                    <option value="desc">Azalan</option>
-                </select>
-            </div>
-
-            <div id='filtre' className='mx-2 my-1 pt-2 md:pt-0 text-gray-900 dark:text-gray-200 flex flex-col items-center md:flex-row justify-center'>
-                <span className='mb-2 md:mb-0'>
-                Filtreleme:
-                </span>
-                {/* status priority e göre filtreleme */}
-                <select className='mb-2 md:mb-0 border rounded-2xl text-center no-arrow mx-2 w-24 dark:bg-gray-900' value={currentPriority} onChange={(e) => {
-                    setCurrentPriority(e.target.value);
-                }}>
-                    <option value="none">Priority</option>
-                    <option value="low">Low</option>
-                    <option value="medium">Medium</option>
-                    <option value="high">High</option>
-                </select>
-                <select className='mb-2 md:mb-0 border rounded-2xl text-center no-arrow mx-2 w-24 dark:bg-gray-900' value={currentStatus} onChange={(e) => {
-                    setCurrentStatus(e.target.value);
-                }}>
-                    <option value="none" >Status</option>
-                    <option value="pending" >Pending</option>
-                    <option value="in_progress" >In progress</option>
-                    <option value="cancelled" >Cancelled</option>
-                    <option value="completed" >Completed</option>
-                </select>
-                <select className='border rounded-2xl text-center no-arrow mx-2 w-24 dark:bg-gray-900' onChange={(e) => {
-                    setCurrentCategory(e.target.value);
-                }}>
-                    <option value="">Category</option>
-                    {
-                        categorySelector.data.map((c) => {
-                            return (
-                                <option style={{ backgroundColor: c.color }} value={c.name.toLowerCase()}>{c.name}</option>
-                            )
-                        })
-                    }
-                </select>
+                {/* Clear Filters Button */}
+                <div className='flex items-center'>
+                    <button
+                        onClick={clearFilter}
+                        className='px-4 py-2.5 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 text-sm'
+                    >
+                        🗑️ Temizle
+                    </button>
+                </div>
             </div>
         </div>
     )
-
-
-
 }
 
 export default TodoFilter
-

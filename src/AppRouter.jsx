@@ -10,22 +10,30 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import TodoDetail from './pages/TodoDetail';
-import {TodoListPage} from './pages/TodoListPage';
+import { TodoListPage } from './pages/TodoListPage';
 import Categories from './pages/Categories';
 import { AnimatePresence } from 'framer-motion';
+import Register from './pages/Register';
 
 const AppRouter = () => {
     const { isAuthenticated } = useSelector((state) => state.auth);
 
     return (
         <AnimatePresence mode="wait">
-            
+
             <Routes>
                 {/* Public Routes */}
                 <Route
                     path="/login"
                     element={
                         isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login />
+                    }
+                />
+
+                <Route
+                    path="/register"
+                    element={
+                        <Register />
                     }
                 />
 
@@ -66,7 +74,7 @@ const AppRouter = () => {
                     }
                 />
 
-                
+
                 <Route
                     path="/tododetail/:id"
                     element={

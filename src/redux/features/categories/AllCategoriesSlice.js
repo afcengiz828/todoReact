@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { act } from "react";
 
 
 
@@ -47,9 +48,7 @@ export const delCategories = createAsyncThunk("delcategory", async (id, { getSta
 export const updateCategories = createAsyncThunk("updcategory", async (data, { getState }) => {
   const state = getState();
   const token = state?.auth?.token || localStorage.getItem('token');
-
-  console.log(data[0], typeof (data[0].name));
-  console.log(data[0], typeof (data[0].color));
+ 
   const response = await axios.put(
     `http://localhost:8000/api/categories/${data[1]}`,
     data[0],
@@ -60,6 +59,7 @@ export const updateCategories = createAsyncThunk("updcategory", async (data, { g
       }
     }
   );
+  // console.log(response.data.data)
   return response.data;
 })
 
@@ -87,6 +87,7 @@ const initialState = {
   loading: false,
   error: null
 }
+
 const AllCategoriesSlice = createSlice({
   name: "categories",
   initialState,
@@ -148,8 +149,9 @@ const AllCategoriesSlice = createSlice({
 
       .addCase(updateCategories.fulfilled, (state, action) => {
         state.loading = false;
-        const index = state.data.findIndex(c => c.id == action.payload.category.id);
-        state.data[index] = action.payload.category;
+        const index = state.data.findIndex(c => c.id == action.payload.data.id);
+        console.log(action.payload.data.id)
+        state.data[index] = action.payload.data;
         state.id = null
       })
       .addCase(updateCategories.pending, (state, action) => {

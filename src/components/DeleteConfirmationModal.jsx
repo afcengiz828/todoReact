@@ -6,7 +6,7 @@ const DeleteConfirmationModal = ({
   isOpen, 
   onClose, 
   onConfirm, 
-  itemId,                    // ← ID parametresi eklendi
+  itemId,                    
   itemName = "bu öğe",
   title = "Öğeyi Sil"
 }) => {

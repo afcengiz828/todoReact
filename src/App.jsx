@@ -8,6 +8,7 @@ import { getAllTodo } from './redux/features/todo/TodoSlice'
 import { setFiltered, updateFiltered } from './redux/features/todo/FilteredSlice'
 import { setAllTodos } from './redux/features/todo/AllTodoSlice'
 import { getAllCategories } from './redux/features/categories/AllCategoriesSlice'
+import { getUsers } from './redux/features/user/UserSlice'
 
 function App() {
   const dispatch = useDispatch();
@@ -42,10 +43,23 @@ function App() {
     })
   }
 
+  async function fetcUsers(params) {
+    await dispatch(getUsers()).then((response) => {
+      if (response.type == "getcategory/fulfilled") {
+        console.log("Veri başarıyla yüklendi.", response);
+        setCatData(true);
+      }
+      else {
+        console.log(response);
+      }
+    })
+  }
+
   useEffect(() => {
     if (selector.isAuthenticated) {
       fetchData();
       fetchCat();
+      fetcUsers();
     }
   }, [selector.isAuthenticated]);
 
@@ -58,6 +72,7 @@ function App() {
 
   }, [selectorTodo.data]);
 
+  
   return (
     <>
 
@@ -65,6 +80,8 @@ function App() {
       <BrowserRouter>
         <AppRouter />
       </BrowserRouter>
+
+
 
 
 

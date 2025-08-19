@@ -1,243 +1,60 @@
-import { color, useScroll } from 'framer-motion'
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { delCategories, setId } from '../redux/features/categories/AllCategoriesSlice';
-import { DiamondPercent } from 'lucide-react';
-import DeleteConfirmationModal from './DeleteConfirmationModal';
+import React, { useEffect } from 'react'
+import { motion } from 'framer-motion'
+import { useSelector } from 'react-redux'
+import { Hash } from 'lucide-react'
+import CategoryCard from './CategoryCard'
 
 const CategoryList = () => {
-
-  const selector = useSelector(state => state.categories);
-  const selectorTodos = useSelector(state => state.todo);
-  const [data, setData] = useState([]);
-  const dispatch = useDispatch();
+  const selector = useSelector(state => state.categories)
 
   useEffect(() => {
     if (selector.data && selector.data.length > 0) {
-      console.log(selector.data);
+      console.log(selector.data)
     }
-  }, [selector.data]);
-
-  const handleDelete = async (e, id) => {
-    const response = await dispatch(delCategories(id));
-    console.log(response)
-  }
-
-  const handleEdit = (e, id) => {
-    console.log("Id set edildi. handleEdit çalıştı", id);
-    dispatch(setId(id));
-  }
-
-  const [deleteModal, setDeleteModal] = useState({
-    isOpen: false,
-    categoryId: null,
-    categoryText: ""
-  });
-
-  const openDeleteModal = (e, id) => {
-    setDeleteModal({
-      isOpen: true,
-      categoryId: id,
-      categoryText: e.target.value
-    });
-  };
-
-  const closeDeleteModal = () => {
-    setDeleteModal({
-      isOpen: false,
-      categoryId: null,
-      categoryText: ""
-    });
-  };
-
-  const confirmDelete = (e) => {
-    console.log(deleteModal.categoryId);
-    handleDelete(e, deleteModal.categoryId);
-  };
-
-  const getTodoCount = (category) => {
-    //console.log(selectorTodos.data);
-    const todos = selectorTodos.data.filter(c => c.categories_id == category);
-    return todos.length;
-  }
+  }, [selector.data])
 
   return (
-    <>
-      <style>{`
-        @media (max-width: 767px) {
-          .responsive-table,
-          .responsive-table thead,
-          .responsive-table tbody,
-          .responsive-table th,
-          .responsive-table td,
-          .responsive-table tr {
-            display: block !important;
-          }
-          
-          .responsive-table thead tr {
-            position: absolute !important;
-            top: -9999px !important;
-            left: -9999px !important;
-          }
-          
-          .responsive-table tr {
-            border: 1px solid #ccc !important;
-            margin-bottom: 15px !important;
-            padding: 15px !important;
-            border-radius: 12px !important;
-            background: white !important;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
-          }
-          
-          .dark .responsive-table tr {
-            background: rgb(75 85 99) !important;
-            border-color: rgb(107 114 128) !important;
-          }
-          
-          .responsive-table td {
-            border: none !important;
-            position: relative !important;
-            padding-left: 35% !important;
-            padding-top: 10px !important;
-            padding-bottom: 10px !important;
-            min-height: 40px !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center;  
-
-          }
-          
-          .responsive-table td:before {
-            content: attr(data-label) ": " !important;
-            position: absolute !important;
-            left: 6px !important;
-            width: 30% !important;
-            padding-right: 10px !important;
-            white-space: nowrap !important;
-            font-weight: bold !important;
-            color: #666 !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: start;
-
-          }
-          
-          .dark .responsive-table td:before {
-            color: #d1d5db !important;
-            
-          }
-          
-          .responsive-table .color-cell {
-            justify-content: flex-center !important;
-          }
-          
-          .responsive-table .action-buttons {
-            gap: 8px !important;
-            flex-wrap: wrap !important;
-          }
-        }
-        
-        @media (min-width: 768px) {
-          .responsive-table {
-            display: table !important;
-          }
-          
-          .responsive-table thead {
-            display: table-header-group !important;
-          }
-          
-          .responsive-table tbody {
-            display: table-row-group !important;
-          }
-          
-          .responsive-table tr {
-            display: table-row !important;
-          }
-          
-          .responsive-table th,
-          .responsive-table td {
-            display: table-cell !important;
-          }
-        }
-      `}</style>
-
-      <div className="p-4 w-full max-w-6xl mx-auto flex-col justify-center items-center">
-        <div className='flex-col justify-around mt-4'>
-          <div className='flex justify-center overflow-x-auto text-gray-900 dark:text-gray-100'>
-            <table className='responsive-table w-full bg-gray-300 dark:bg-gray-600 border-0 rounded-2xl'>
-              <thead className='p-2 mt-2'>
-                <tr className='p-2'>
-                  <th className='px-3 py-3 text-left'>Name</th>
-                  <th className='px-3 py-3 text-center'>Color</th>
-                  <th className='px-3 py-3 text-center'>Todo Count</th>
-                  <th className='px-3 py-3 text-center'>Actions</th>
-                </tr>
-              </thead>
-              <tbody className='p-2'>
-                {console.log(selector.data)}
-                {
-                  selector.data.map((c) => {
-                    return (
-                      <tr key={c.id} className='text-center p-2 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors'>
-                        <td className='px-3 py-3 text-left font-medium' data-label="Name">
-                          {c.name}
-                        </td>
-                        <td className='px-3 py-3 color-cell' data-label="Color">
-                          <div className='flex items-center justify-center'>
-                            <div 
-                              className='w-8 h-8 border-2 border-white dark:border-gray-800 rounded-full shadow-sm mx-auto' 
-                              style={{ backgroundColor: c.color }}
-                              title={c.color}
-                            >
-                            </div>
-                          </div>
-                        </td>
-                        <td className='px-3 py-3' data-label="Todo Count">
-                          <span className='inline-flex items-center px-2 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100'>
-                            {getTodoCount(c.id)}
-                          </span>
-                        </td>
-                        <td className='px-3 py-3' data-label="Actions">
-                          <div className='flex items-center justify-center gap-2 action-buttons'>
-                            <div
-                              className='bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs inline-block cursor-pointer transition-colors'
-                              onClick={(e) => handleEdit(e, c.id)}
-                            >
-                              Edit
-                            </div>
-                            <button
-                              className='bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs cursor-pointer transition-colors'
-                              onClick={(e) => openDeleteModal(e, c.id)}
-                            >
-                              Delete
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    )
-                  })
-                }
-              </tbody>
-            </table>
-          </div>
-          
-          {/* Veri yoksa gösterilecek mesaj */}
-          {selector.data && selector.data.length === 0 && (
-            <div className='text-center bg-yellow-500 dark:bg-yellow-600 text-white p-4 border-0 rounded-2xl mt-4'>
-              Henüz kategori bulunmuyor...
-            </div>
-          )}
-          
-          <DeleteConfirmationModal
-            isOpen={deleteModal.isOpen}
-            onClose={closeDeleteModal}
-            onConfirm={confirmDelete}
-            itemName={deleteModal.categoryText}
-            title="Kategoriyi Sil"
-          />
-        </div>
+    <div className="lg:col-span-2">
+      <div className="mb-6">
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+          Mevcut Kategoriler
+        </h3>
+        <p className="text-gray-600 dark:text-gray-400">
+          {selector.data ? selector.data.length : 0} kategori mevcut
+        </p>
       </div>
-    </>
+
+      {!selector.data || selector.data.length === 0 ? (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border border-yellow-200 dark:border-yellow-800 rounded-2xl p-8 text-center"
+        >
+          <div className="w-16 h-16 bg-yellow-100 dark:bg-yellow-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <Hash className="w-8 h-8 text-yellow-600 dark:text-yellow-400" />
+          </div>
+          <h4 className="text-lg font-semibold text-yellow-800 dark:text-yellow-300 mb-2">
+            Henüz kategori yok
+          </h4>
+          <p className="text-yellow-600 dark:text-yellow-400">
+            İlk kategorinizi oluşturarak başlayın
+          </p>
+        </motion.div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {selector.data.map((category, index) => (
+            <motion.div
+              key={category.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+            >
+              <CategoryCard category={category} />
+            </motion.div>
+          ))}
+        </div>
+      )}
+    </div>
   )
 }
 

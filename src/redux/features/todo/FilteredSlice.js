@@ -55,16 +55,21 @@ export const FilteredSlice = createSlice({
             .addCase(updateTodoStatus.fulfilled, (state, action) => {
                 const updatedTodo = action.payload.data.data;
                 const index = state.filteredTodos.findIndex(todo => { todo.status = updatedTodo.status; });
-                if(index !== -1){
+                if (index !== -1) {
                     state.allTodos[index].status = updatedTodo.status;
                 }
             })
             .addCase(addTodo.fulfilled, (state, action) => {
-                console.log(action.payload)
-                state.filteredTodos.push(action.payload.data);
+                // API'den gelen verinin "data" özelliğinin var olduğundan emin olun
+                if (action.payload && action.payload.data) {
+                    state.filteredTodos.push(action.payload.data);
+                } else {
+                    // Hata ayıklama için konsola bir uyarı yazdırın
+                    console.error("Payload.data is missing:", action.payload);
+                }
             })
-        },
-    });
+    },
+});
 
 
 export const { addFiltered, updateFiltered, setFiltered, setFilteredStatus, delFiltered } = FilteredSlice.actions;
